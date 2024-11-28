@@ -14,7 +14,7 @@ import {
   Stack,
   Textarea,
 } from '~/components/ui'
-import type { Route } from './+types/home'
+import type { Route } from './+types/test'
 
 const schema = z.object({
   style: z.string({ required_error: '必須' }),

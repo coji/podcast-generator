@@ -1,7 +1,0 @@
-services:
-  api:
-    image: ghcr.io/aivis-project/aivisspeech-engine:cpu-latest
-    ports:
-      - '10101:10101'
-    volumes:
-      - ~/Library/Application Support/AivisSpeech-Engine:/home/user/.local/share/AivisSpeech-Engine-Dev
