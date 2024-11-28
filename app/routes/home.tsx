@@ -3,7 +3,17 @@ import { parseWithZod } from '@conform-to/zod'
 import fs from 'node:fs/promises'
 import { useFetcher } from 'react-router'
 import { z } from 'zod'
-import { Button, Label, Stack, Textarea } from '~/components/ui'
+import {
+  Button,
+  Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Stack,
+  Textarea,
+} from '~/components/ui'
 import type { Route } from './+types/home'
 
 const schema = z.object({
@@ -60,7 +70,15 @@ export const loader = async (args: Route.LoaderArgs) => {
       supported_features: Record<string, string>
     },
   ] = await ret.json()
-  return { speakers, style: speakers[0].styles[0] }
+
+  const styles = speakers.flatMap((speaker) =>
+    speaker.styles.map((style) => ({
+      speaker: speaker.name,
+      ...style,
+    })),
+  )
+
+  return { speakers, styles }
 }
 
 export const action = async ({ request }: Route.ActionArgs) => {
@@ -76,24 +94,22 @@ export const action = async ({ request }: Route.ActionArgs) => {
   })
   const queryResult = await fetch(
     `http://localhost:10101/audio_query?${queryParams.toString()}`,
-    {
-      method: 'POST',
-    },
+    { method: 'POST' },
   )
   const queryResultJson: AccentPhrases = await queryResult.json()
-  console.dir(queryResultJson, { depth: null })
 
   // generate
   const synthesisResult = await fetch(
     `http://localhost:10101/synthesis?speaker=${submission.value.style}`,
     {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(queryResultJson),
     },
   )
+  if (synthesisResult.status >= 400) {
+    throw new Error(synthesisResult.statusText)
+  }
 
   const id = crypto.randomUUID()
   const wav = await synthesisResult.arrayBuffer()
@@ -102,9 +118,14 @@ export const action = async ({ request }: Route.ActionArgs) => {
   return { lastResult: submission.reply(), id }
 }
 
-export default function Home({ loaderData: { style } }: Route.ComponentProps) {
+export default function Home({
+  loaderData: { speakers, styles },
+}: Route.ComponentProps) {
   const fetcher = useFetcher<typeof action>()
-  const [form, { text }] = useForm({
+  const [form, fields] = useForm({
+    defaultValue: {
+      style: String(styles[0].id),
+    },
     lastResult: fetcher.data?.lastResult,
     onValidate: ({ formData }) => parseWithZod(formData, { schema }),
   })
@@ -125,11 +146,28 @@ export default function Home({ loaderData: { style } }: Route.ComponentProps) {
             className="flex flex-col gap-4"
             {...getFormProps(form)}
           >
-            <input type="hidden" name="style" value={style.id} />
+            <Select
+              defaultValue={fields.style.initialValue}
+              name={fields.style.name}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {styles.map((st) => {
+                  return (
+                    <SelectItem key={st.id} value={String(st.id)}>
+                      {st.id}: {st.speaker} - {st.name}
+                    </SelectItem>
+                  )
+                })}
+              </SelectContent>
+            </Select>
+
             <div>
-              <Label htmlFor={text.id}>原稿</Label>
-              <Textarea {...getTextareaProps(text)} />
-              <div className="text-destructive">{text.errors}</div>
+              <Label htmlFor={fields.text.id}>原稿</Label>
+              <Textarea {...getTextareaProps(fields.text)} />
+              <div className="text-destructive">{fields.text.errors}</div>
             </div>
 
             <Button isLoading={fetcher.state === 'submitting'}>
@@ -140,12 +178,6 @@ export default function Home({ loaderData: { style } }: Route.ComponentProps) {
           {fetcher.data?.id && (
             <audio controls autoPlay key={fetcher.data.id}>
               <source src={`/data/${fetcher.data.id}.wav`} type="audio/wav" />
-              <track
-                kind="captions"
-                srcLang="ja"
-                src={`/data/${fetcher.data.id}.ja.vtt`}
-                label="Japanese captions"
-              />
             </audio>
           )}
         </Stack>

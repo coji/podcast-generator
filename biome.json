@@ -18,7 +18,8 @@
       },
       "a11y": {
         "useSemanticElements": "off",
-        "useFocusableInteractive": "off"
+        "useFocusableInteractive": "off",
+        "useMediaCaption": "off"
       }
     }
   }

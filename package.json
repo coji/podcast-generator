@@ -6,7 +6,9 @@
     "build": "react-router build",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc --build --noEmit"
+    "typecheck": "react-router typegen && tsc --build --noEmit",
+    "engine:start": "pm2 start /Applications/AivisSpeech.app/Contents/Resources/AivisSpeech-Engine/run --name engine",
+    "engine:stop": "pm2 stop engine"
   },
   "dependencies": {
     "@conform-to/react": "^1.2.2",
@@ -47,6 +49,7 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "autoprefixer": "^10.4.20",
+    "pm2": "^5.4.3",
     "postcss": "^8.4.49",
     "prettier": "^3.4.1",
     "prettier-plugin-organize-imports": "^4.1.0",
