@@ -47,8 +47,17 @@ export default function PodcastManager() {
         </HStack>
 
         {entries.map((entry) => (
-          <NavLink key={entry.id} to={entry.id} preventScrollReset>
-            <RssEntry entry={entry} feedTitle={entry.RssFeed.title} />
+          <NavLink
+            key={entry.id}
+            to={entry.id}
+            preventScrollReset
+            className="group"
+          >
+            <RssEntry
+              entry={entry}
+              feedTitle={entry.RssFeed.title}
+              className="group-aria-[current]:bg-secondary"
+            />
           </NavLink>
         ))}
       </Stack>

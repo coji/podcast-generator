@@ -19,6 +19,7 @@ model User {
   createdAt      DateTime         @default(now()) @map("created_at")
   updatedAt      DateTime         @default(now()) @updatedAt @map("updated_at")
   podcastChannel PodcastChannel[]
+
   @@map("users")
 }
 
@@ -31,6 +32,7 @@ model PodcastChannel {
   updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
   User        User      @relation(fields: [userId], references: [id])
   RssFeed     RssFeed[]
+
   @@map("podcast_channels")
 }
 
@@ -44,6 +46,7 @@ model RssFeed {
   updatedAt        DateTime       @default(now()) @updatedAt @map("updated_at")
   podcastChannel   PodcastChannel @relation(fields: [podcastChannelId], references: [id])
   entries          RssEntry[]
+
   @@map("rss_feeds")
 }
 
@@ -57,5 +60,7 @@ model RssEntry {
   updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
   RssFeed     RssFeed  @relation(fields: [rssFeedId], references: [id])
   rssFeedId   String   @map("rss_feed_id")
+  isNew       Boolean  @default(true) @map("is_new")
+
   @@map("rss_entries")
 }
