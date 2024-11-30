@@ -1,4 +1,14 @@
-import { Button } from './ui'
+import { TZDate } from '@date-fns/tz'
+import { format } from 'date-fns'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Stack,
+} from './ui'
 
 interface RssEntry {
   title: string
@@ -14,32 +24,25 @@ interface RssEntryListProps {
 
 export function RssEntryList({ entries, onSelect }: RssEntryListProps) {
   return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold">RSS Entries</h2>
-      <ul className="space-y-2">
-        {entries?.map((entry) => (
-          <li key={entry.link} className="rounded border p-4">
-            <h3 className="font-semibold">{entry.title}</h3>
-            <a
-              className="text-sm text-gray-500 underline"
-              href={entry.link}
-              target="_blank"
-              rel="noreferrer"
-            >
-              {entry.link}
-            </a>
-            <p className="text-sm text-gray-500">
-              {new Date(entry.pubDate).toLocaleString()}
-            </p>
-            <Button
-              onClick={() => onSelect(entry)}
-              className="mt-2 rounded bg-green-500 px-4 py-2 text-white"
-            >
+    <Stack>
+      {entries?.map((entry) => (
+        <Card key={entry.link}>
+          <CardHeader>
+            <CardTitle>{entry.title}</CardTitle>
+            <CardDescription>
+              {format(
+                new TZDate(entry.pubDate, 'Asia/Tokyo'),
+                'yyyy-MM-dd HH:mm',
+              )}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button variant="outline" onClick={() => onSelect(entry)}>
               Generate Script
             </Button>
-          </li>
-        ))}
-      </ul>
-    </div>
+          </CardContent>
+        </Card>
+      ))}
+    </Stack>
   )
 }

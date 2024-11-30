@@ -15,7 +15,9 @@ export async function fetchRssFeed(url: string): Promise<RssEntry[]> {
     return feed.items.map((item) => ({
       title: item.title ?? 'no title',
       link: item.link ?? 'no link',
-      content: item.content ?? 'no content',
+      content: item.content
+        ? item.content.replace(/<[^>]+>/g, '')
+        : 'no content',
       pubDate: item.pubDate ?? 'no date',
     }))
   } catch (error) {
