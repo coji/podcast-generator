@@ -6,3 +6,7 @@ export const getPodcast = async (id: PodcastChannel['id']) => {
     where: { id },
   })
 }
+
+export const listPodcasts = async () => {
+  return await prisma.podcastChannel.findMany()
+}
