@@ -4,12 +4,13 @@ import { AudioPreview } from '~/components/AudioPreview'
 import { RssEntryList } from '~/components/RssEntryList'
 import { ScriptEditor } from '~/components/ScriptEditor'
 import { Stack } from '~/components/ui'
-import { fetchRssFeed, type RssEntry } from '~/utils/rssUtils'
+import type { RssEntry } from '~/utils/rssUtils'
+import { getPodcastChannelId, listRssEntries } from './queries'
 
 export const loader = async (args: LoaderFunctionArgs) => {
-  const url = 'https://momo19nam.hatenablog.jp/rss'
-  const feed = await fetchRssFeed(url)
-  return { feed }
+  const podcastChannel = await getPodcastChannelId('testuser')
+  const entries = await listRssEntries(podcastChannel.id)
+  return { entries }
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -40,7 +41,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 }
 
 export default function PodcastManager() {
-  const { feed } = useLoaderData<typeof loader>()
+  const { entries } = useLoaderData<typeof loader>()
   const actionData = useActionData<typeof action>()
   const submit = useSubmit()
 
@@ -75,7 +76,7 @@ export default function PodcastManager() {
   }
 
   return (
-    <div className="grid max-h-dvh grid-cols-1 grid-rows-[auto,1fr]">
+    <div className="grid min-h-dvh grid-cols-1 grid-rows-[auto,1fr]">
       <header className="px-4 py-2">
         <h1 className="text-2xl font-bold">Podcast Manager</h1>
       </header>
@@ -83,7 +84,14 @@ export default function PodcastManager() {
       <main className="grid gap-4 overflow-hidden bg-gray-100 px-4 py-2 md:grid-cols-[minmax(0,300px),minmax(0,1fr)]">
         <Stack className="overflow-y-auto">
           <h2 className="text-xl font-semibold">RSS Entries</h2>
-          <RssEntryList entries={feed.items} onSelect={handleSelectEntry} />
+          <RssEntryList
+            entries={entries.map((e) => {
+              const { publishedAt, rssFeedId, createdAt, updatedAt, ...rest } =
+                e
+              return { ...rest, pubDate: publishedAt.toISOString() }
+            })}
+            onSelect={handleSelectEntry}
+          />
         </Stack>
 
         <Stack className="overflow-auto">

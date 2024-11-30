@@ -11,6 +11,7 @@ import {
 } from './ui'
 
 interface RssEntry {
+  id: string
   title: string
   link: string
   content: string
@@ -26,7 +27,7 @@ export function RssEntryList({ entries, onSelect }: RssEntryListProps) {
   return (
     <Stack>
       {entries?.map((entry) => (
-        <Card key={entry.link}>
+        <Card key={entry.id}>
           <CardHeader className="p-2">
             <HStack>
               <div className="flex-1">

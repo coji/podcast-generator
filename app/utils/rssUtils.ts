@@ -1,5 +1,5 @@
 import Parser from 'rss-parser'
-import { testFeed } from './test-feed'
+import { testFeed } from '../../prisma/test-feed'
 
 const parser = new Parser()
 

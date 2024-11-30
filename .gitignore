@@ -178,3 +178,5 @@ data/*
 
 .react-router
 build
+
+prisma/dev.db*
