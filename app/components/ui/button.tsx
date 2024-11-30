@@ -66,7 +66,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {isLoading ? (
-          <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent" />
+          <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-foreground border-t-transparent" />
         ) : (
           leftIcon
         )}
