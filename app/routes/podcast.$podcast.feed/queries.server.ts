@@ -9,6 +9,9 @@ export const listRssEntries = async (
   podcastChannelId: PodcastChannel['id'],
 ) => {
   return await prisma.rssEntry.findMany({
+    include: {
+      RssFeed: true,
+    },
     where: { RssFeed: { podcastChannelId } },
     orderBy: { publishedAt: 'desc' },
   })

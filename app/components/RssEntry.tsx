@@ -1,6 +1,6 @@
 import { TZDate } from '@date-fns/tz'
 import { format } from 'date-fns'
-import { Card, CardDescription, CardHeader, CardTitle } from './ui'
+import { Card, CardDescription, CardHeader, CardTitle, Stack } from './ui'
 
 interface RssEntry {
   id: string
@@ -12,9 +12,10 @@ interface RssEntry {
 
 interface RssEntryProps {
   entry: RssEntry
+  feedTitle: string
 }
 
-export function RssEntry({ entry }: RssEntryProps) {
+export function RssEntry({ entry, feedTitle }: RssEntryProps) {
   return (
     <Card key={entry.id}>
       <CardHeader className="p-2">
@@ -24,7 +25,12 @@ export function RssEntry({ entry }: RssEntryProps) {
             'yyyy-MM-dd HH:mm',
           )}
         </CardDescription>
-        <CardTitle className="line-clamp-1">{entry.title}</CardTitle>
+        <CardTitle>
+          <Stack>
+            <div className="line-clamp-1">{entry.title}</div>
+            <div className="font-light text-muted-foreground">{feedTitle}</div>
+          </Stack>
+        </CardTitle>
       </CardHeader>
     </Card>
   )

@@ -48,7 +48,7 @@ export default function PodcastManager() {
 
         {entries.map((entry) => (
           <NavLink key={entry.id} to={entry.id} preventScrollReset>
-            <RssEntry entry={entry} />
+            <RssEntry entry={entry} feedTitle={entry.RssFeed.title} />
           </NavLink>
         ))}
       </Stack>
