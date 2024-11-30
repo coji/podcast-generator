@@ -56,7 +56,7 @@ export default function PodcastManager() {
             <RssEntry
               entry={entry}
               feedTitle={entry.RssFeed.title}
-              className="group-aria-[current]:bg-accent"
+              className="group-aria-[current]:bg-accent group-aria-[current]:text-accent-foreground"
             />
           </NavLink>
         ))}

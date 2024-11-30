@@ -1,15 +1,7 @@
 import { TZDate } from '@date-fns/tz'
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
-import {
-  Badge,
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  HStack,
-  Stack,
-} from './ui'
+import { Badge, Card, CardContent, CardHeader, CardTitle, HStack } from './ui'
 
 interface RssEntry {
   id: string
@@ -30,23 +22,21 @@ export function RssEntry({ entry, feedTitle, className }: RssEntryProps) {
     <Card key={entry.id} className={className}>
       <CardHeader className="p-2">
         <HStack>
-          <CardDescription className="flex-1">
+          <div className="flex-1 text-sm">
             {format(
               new TZDate(entry.publishedAt, 'Asia/Tokyo'),
               'yyyy-MM-dd(ccc) HH:mm',
               { locale: ja },
             )}
-          </CardDescription>
+          </div>
 
-          <div>{entry.isNew && <Badge variant="default">New</Badge>}</div>
+          <div>{entry.isNew && <Badge variant="secondary">New</Badge>}</div>
         </HStack>
-        <CardTitle>
-          <Stack>
-            <div className="line-clamp-1">{entry.title}</div>
-            <div className="font-light text-muted-foreground">{feedTitle}</div>
-          </Stack>
-        </CardTitle>
+        <CardTitle className="line-clamp-1">{entry.title}</CardTitle>
       </CardHeader>
+      <CardContent className="px-2 pb-2">
+        <div className="font-light">{feedTitle}</div>
+      </CardContent>
     </Card>
   )
 }

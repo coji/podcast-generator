@@ -31,7 +31,7 @@ export default function EntryIndex({
   })
 
   return (
-    <Card className="flex h-full flex-col">
+    <Card key={entry.id} className="flex h-full flex-col">
       <CardHeader>
         <HStack>
           <div className="flex-1">
@@ -39,7 +39,7 @@ export default function EntryIndex({
             <CardDescription />
           </div>
 
-          <Tabs key={entry.id} defaultValue="source">
+          <Tabs defaultValue="source">
             <TabsList>
               <TabsTrigger value="source">エントリ 原文</TabsTrigger>
               <TabsTrigger value="manuscript">Podcast 原稿</TabsTrigger>
