@@ -3,10 +3,10 @@ import { format } from 'date-fns'
 import {
   Button,
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
+  HStack,
   Stack,
 } from './ui'
 
@@ -27,20 +27,28 @@ export function RssEntryList({ entries, onSelect }: RssEntryListProps) {
     <Stack>
       {entries?.map((entry) => (
         <Card key={entry.link}>
-          <CardHeader>
-            <CardTitle>{entry.title}</CardTitle>
-            <CardDescription>
-              {format(
-                new TZDate(entry.pubDate, 'Asia/Tokyo'),
-                'yyyy-MM-dd HH:mm',
-              )}
-            </CardDescription>
+          <CardHeader className="p-2">
+            <HStack>
+              <div className="flex-1">
+                <CardDescription>
+                  {format(
+                    new TZDate(entry.pubDate, 'Asia/Tokyo'),
+                    'yyyy-MM-dd HH:mm',
+                  )}
+                </CardDescription>
+                <CardTitle className="line-clamp-1">{entry.title}</CardTitle>
+              </div>
+              <div>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => onSelect(entry)}
+                >
+                  Details
+                </Button>
+              </div>
+            </HStack>
           </CardHeader>
-          <CardContent>
-            <Button variant="outline" onClick={() => onSelect(entry)}>
-              Generate Script
-            </Button>
-          </CardContent>
         </Card>
       ))}
     </Stack>

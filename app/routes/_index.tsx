@@ -8,8 +8,8 @@ import { fetchRssFeed, type RssEntry } from '~/utils/rssUtils'
 
 export const loader = async (args: LoaderFunctionArgs) => {
   const url = 'https://momo19nam.hatenablog.jp/rss'
-  const entries = await fetchRssFeed(url)
-  return { entries }
+  const feed = await fetchRssFeed(url)
+  return { feed }
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -40,7 +40,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 }
 
 export default function PodcastManager() {
-  const { entries } = useLoaderData<typeof loader>()
+  const { feed } = useLoaderData<typeof loader>()
   const actionData = useActionData<typeof action>()
   const submit = useSubmit()
 
@@ -76,34 +76,32 @@ export default function PodcastManager() {
 
   return (
     <div className="grid max-h-dvh grid-cols-1 grid-rows-[auto,1fr]">
-      <header className="bg-blue-500 p-4 text-white">
-        <h1 className="px-4 py-2 text-2xl font-bold">Podcast Manager</h1>
+      <header className="px-4 py-2">
+        <h1 className="text-2xl font-bold">Podcast Manager</h1>
       </header>
 
-      <main className="grid grid-cols-2 gap-4 overflow-hidden">
-        <div className="overflow-y-auto bg-gray-100 p-4">
-          <RssEntryList entries={entries} onSelect={handleSelectEntry} />
-        </div>
+      <main className="grid gap-4 overflow-hidden bg-gray-100 px-4 py-2 md:grid-cols-[minmax(0,300px),minmax(0,1fr)]">
+        <Stack className="overflow-y-auto">
+          <h2 className="text-xl font-semibold">RSS Entries</h2>
+          <RssEntryList entries={feed.items} onSelect={handleSelectEntry} />
+        </Stack>
 
-        {/* 右カラム */}
-        <div className="overflow-y-auto bg-gray-200 p-4">
-          <Stack>
-            {actionData?.action === 'generateScript' && actionData.content && (
-              <ScriptEditor
-                key={actionData?.url}
-                initialScript={actionData.content}
-                onGenerate={handleGenerateEpisode}
-              />
-            )}
+        <Stack className="overflow-auto">
+          {actionData?.action === 'generateScript' && actionData.content && (
+            <ScriptEditor
+              key={actionData?.url}
+              initialScript={actionData.content}
+              onGenerate={handleGenerateEpisode}
+            />
+          )}
 
-            {actionData?.audioUrl && (
-              <AudioPreview
-                audioUrl={actionData.audioUrl}
-                onPublish={handlePublishEpisode}
-              />
-            )}
-          </Stack>
-        </div>
+          {actionData?.audioUrl && (
+            <AudioPreview
+              audioUrl={actionData.audioUrl}
+              onPublish={handlePublishEpisode}
+            />
+          )}
+        </Stack>
       </main>
       {/* <PodcastList episodes={podcastEpisodes} /> */}
     </div>
