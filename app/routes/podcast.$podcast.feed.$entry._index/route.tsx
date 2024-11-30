@@ -9,7 +9,6 @@ import {
   CardTitle,
   HStack,
   Tabs,
-  TabsContent,
   TabsList,
   TabsTrigger,
   Textarea,
@@ -32,32 +31,30 @@ export default function EntryIndex({
   })
 
   return (
-    <Tabs className="flex h-full" key={entry.id}>
-      <Card className="flex flex-1 flex-col">
-        <CardHeader>
-          <HStack>
-            <div className="flex-1">
-              <CardTitle>{entry.title}</CardTitle>
-              <CardDescription />
-            </div>
+    <Card className="flex h-full flex-col">
+      <CardHeader>
+        <HStack>
+          <div className="flex-1">
+            <CardTitle>{entry.title}</CardTitle>
+            <CardDescription />
+          </div>
 
+          <Tabs key={entry.id} defaultValue="source">
             <TabsList>
-              <TabsTrigger value="source">Source</TabsTrigger>
-              <TabsTrigger value="manuscript">Manuscript</TabsTrigger>
+              <TabsTrigger value="source">エントリ 原文</TabsTrigger>
+              <TabsTrigger value="manuscript">Podcast 原稿</TabsTrigger>
             </TabsList>
-          </HStack>
-        </CardHeader>
+          </Tabs>
+        </HStack>
+      </CardHeader>
 
-        <CardContent className="flex-1">
-          <TabsContent value="source" className="flex h-full">
-            <Textarea defaultValue={entry.content} className="flex-1" />
-          </TabsContent>
-          <TabsContent value="manuscript">
-            <div>{object?.manuscript}</div>
-          </TabsContent>
-        </CardContent>
+      <CardContent className="flex flex-1">
+        <Textarea defaultValue={entry.content} className="flex-1" />
+        <div>{object?.manuscript}</div>
+      </CardContent>
 
-        <CardFooter>
+      <CardFooter>
+        <HStack>
           <Button
             type="button"
             onClick={() => {
@@ -68,10 +65,10 @@ export default function EntryIndex({
             }}
             isLoading={isLoading}
           >
-            hoge
+            原稿を生成
           </Button>
-        </CardFooter>
-      </Card>
-    </Tabs>
+        </HStack>
+      </CardFooter>
+    </Card>
   )
 }
