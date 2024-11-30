@@ -684,7 +684,7 @@ export const testFeed = {
   title: 'アグレッシブちゃんもも',
   description: 'AdMel（アドメル）というアドテクの会社をやっています。',
   generator: 'Hatena::Blog',
-  link: 'https://momo19nam.hatenablog.jp/',
+  link: 'https://momo19nam.hatenablog.jp/rss',
   lastBuildDate: 'Fri, 29 Nov 2024 23:30:00 +0900',
   docs: 'http://blogs.law.harvard.edu/tech/rss',
 }

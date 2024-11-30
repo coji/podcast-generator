@@ -1,10 +1,10 @@
-import { setTimeout } from 'node:timers/promises'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router'
-import { NavLink, Outlet, useFetcher, useLoaderData } from 'react-router'
+import { data, NavLink, Outlet, useFetcher, useLoaderData } from 'react-router'
 import { dataWithSuccess } from 'remix-toast'
 import { RssEntry } from '~/components/RssEntry'
 import { Button, HStack, Stack } from '~/components/ui'
-import { getPodcastChannelId, listRssEntries } from './queries'
+import { syncRssEntries } from './functions.server'
+import { getPodcastChannelId, listRssEntries } from './queries.server'
 
 export const loader = async (args: LoaderFunctionArgs) => {
   const podcastChannel = await getPodcastChannelId('testuser')
@@ -12,32 +12,18 @@ export const loader = async (args: LoaderFunctionArgs) => {
   return { entries }
 }
 
-export const action = async ({ request }: ActionFunctionArgs) => {
-  await setTimeout(1000)
-  const formData = await request.formData()
-  const action = formData.get('_action')
-
-  if (action === 'generateScript') {
-    const url = formData.get('url') as string
-    const content = formData.get('content') as string
-    return { action: 'generateScript', url, content }
+export const action = async ({ request, params }: ActionFunctionArgs) => {
+  if (!params.podcast) {
+    throw data('Not Found', { status: 404 })
   }
-
-  if (action === 'generateAudio') {
-    const script = formData.get('script') as string
-    // TODO: Implement text-to-speech API call
-    const audioUrl = 'dummy_audio_url.mp3'
-    return { action: 'generateAudio', audioUrl }
-  }
-
-  if (action === 'publishEpisode') {
-    const title = formData.get('title') as string
-    const audioUrl = formData.get('audioUrl') as string
-    // TODO: Save episode to database
-    return { action: 'publishEpisode', success: true }
-  }
-
-  return dataWithSuccess({ action: 'unknown' }, { message: 'success!' })
+  const { added, updated } = await syncRssEntries(params.podcast)
+  return dataWithSuccess(
+    { success: true },
+    {
+      message: 'sync success',
+      description: `added: ${added.length}, updated: ${updated.length}`,
+    },
+  )
 }
 
 export default function PodcastManager() {
