@@ -1,10 +1,9 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router'
 import { useActionData, useLoaderData, useSubmit } from 'react-router'
 import { AudioPreview } from '~/components/AudioPreview'
-import { RssEntryList } from '~/components/RssEntryList'
+import { RssEntry } from '~/components/RssEntry'
 import { ScriptEditor } from '~/components/ScriptEditor'
 import { Stack } from '~/components/ui'
-import type { RssEntry } from '~/utils/rssUtils'
 import { getPodcastChannelId, listRssEntries } from './queries'
 
 export const loader = async (args: LoaderFunctionArgs) => {
@@ -45,18 +44,7 @@ export default function PodcastManager() {
   const actionData = useActionData<typeof action>()
   const submit = useSubmit()
 
-  const handleSelectEntry = (entry: RssEntry) => {
-    submit(
-      {
-        url: entry.link,
-        content: entry.content,
-        _action: 'generateScript',
-      },
-      {
-        method: 'POST',
-      },
-    )
-  }
+  const handleSelectEntry = (entryId: string) => {}
 
   const handleGenerateEpisode = (script: string) => {
     submit({ script, _action: 'generateAudio' }, { method: 'post' })
@@ -84,14 +72,10 @@ export default function PodcastManager() {
       <main className="grid gap-4 overflow-hidden bg-gray-100 px-4 py-2 md:grid-cols-[minmax(0,300px),minmax(0,1fr)]">
         <Stack className="overflow-y-auto">
           <h2 className="text-xl font-semibold">RSS Entries</h2>
-          <RssEntryList
-            entries={entries.map((e) => {
-              const { publishedAt, rssFeedId, createdAt, updatedAt, ...rest } =
-                e
-              return { ...rest, pubDate: publishedAt.toISOString() }
-            })}
-            onSelect={handleSelectEntry}
-          />
+
+          {entries.map((entry) => (
+            <RssEntry key={entry.id} entry={entry} />
+          ))}
         </Stack>
 
         <Stack className="overflow-auto">
