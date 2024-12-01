@@ -57,7 +57,7 @@ export default function PodcastLayout({
         </HStack>
       </header>
 
-      <main className="bg-slate-200 px-4 py-2">
+      <main className="grid grid-cols-1 overflow-hidden bg-slate-200 px-4 py-2">
         <Outlet />
       </main>
     </div>

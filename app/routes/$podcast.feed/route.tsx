@@ -32,7 +32,7 @@ export default function PodcastManager({
   const fetcher = useFetcher<typeof action>()
 
   return (
-    <div className="grid overflow-hidden md:grid-cols-[minmax(0,300px),minmax(0,1fr)]">
+    <div className="grid overflow-hidden md:grid-cols-[300px,minmax(0,1fr)]">
       <Stack className="overflow-y-auto pr-4">
         <HStack>
           <h2 className="flex-1 text-xl font-semibold">Feed Entries</h2>
