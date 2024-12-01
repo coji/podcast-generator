@@ -14,38 +14,47 @@ datasource db {
 }
 
 model User {
-  id             String           @id @default(uuid())
-  name           String
-  createdAt      DateTime         @default(now()) @map("created_at")
-  updatedAt      DateTime         @default(now()) @updatedAt @map("updated_at")
-  podcastChannel PodcastChannel[]
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  Podcast Podcast[]
 
   @@map("users")
 }
 
-model PodcastChannel {
-  id          String    @id @default(uuid())
-  userId      String    @map("user_id")
+model Podcast {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
   title       String
   description String
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
-  User        User      @relation(fields: [userId], references: [id])
-  RssFeed     RssFeed[]
+  link        String
+  image       String?
+  language    String   @default("ja")
+  categoryId  String   @map("category_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
 
-  @@map("podcast_channels")
+  User     User      @relation(fields: [userId], references: [id])
+  RssFeed  RssFeed[]
+  Episode  Episode[]
+
+  @@map("podcasts")
 }
 
 model RssFeed {
-  id               String         @id @default(uuid())
-  podcastChannelId String         @map("podcast_channel_id")
-  link             String         @unique
-  title            String
-  description      String
-  createdAt        DateTime       @default(now()) @map("created_at")
-  updatedAt        DateTime       @default(now()) @updatedAt @map("updated_at")
-  podcastChannel   PodcastChannel @relation(fields: [podcastChannelId], references: [id])
-  entries          RssEntry[]
+  id          String   @id @default(uuid())
+  podcastId   String   @map("podcast_id")
+  link        String   @unique
+  title       String
+  description String
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  Podcast Podcast    @relation(fields: [podcastId], references: [id])
+  Entries RssEntry[]
 
   @@map("rss_feeds")
 }
@@ -58,9 +67,62 @@ model RssEntry {
   publishedAt DateTime @map("published_at")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
-  RssFeed     RssFeed  @relation(fields: [rssFeedId], references: [id])
   rssFeedId   String   @map("rss_feed_id")
   isNew       Boolean  @default(true) @map("is_new")
 
+  RssFeed        RssFeed          @relation(fields: [rssFeedId], references: [id])
+  EpisodeSources EpisodeSources[]
+
   @@map("rss_entries")
+}
+
+model BackgroundMusic {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  audioFile   String   @map("audio_file")
+  duration    Int
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  Episode Episode[]
+
+  @@map("background_musics")
+}
+
+model Episode {
+  id                String    @id @default(uuid())
+  podcastId         String    @map("podcast_id")
+  backgroundMusicId String?
+  title             String
+  description       String
+  imageUrl          String?   @map("image_url")
+  manuscript        String?
+  audioUrl          String?   @map("audio_url")
+  audioLength       Int?      @map("audio_length")
+  audioType         String?   @map("audio_type")
+  audioDuration     Int?      @map("audio_duration")
+  state             String    @default("draft") // draft, published, deleted
+  publishedAt       DateTime? @map("published_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  BackgroundMusic BackgroundMusic? @relation(fields: [backgroundMusicId], references: [id])
+  Podcast         Podcast          @relation(fields: [podcastId], references: [id])
+  EpisodeSources  EpisodeSources[]
+
+  @@map("episodes")
+}
+
+model EpisodeSources {
+  id         String   @id @default(uuid())
+  episodeId  String   @map("episode_id")
+  rssEntryId String   @map("rss_entry_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+
+  Episode  Episode  @relation(fields: [episodeId], references: [id])
+  RssEntry RssEntry @relation(fields: [rssEntryId], references: [id])
+
+  @@map("episode_sources")
 }

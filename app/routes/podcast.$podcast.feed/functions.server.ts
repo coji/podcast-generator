@@ -1,12 +1,10 @@
-import type { PodcastChannel, RssEntry } from '@prisma/client'
+import type { Podcast, RssEntry } from '@prisma/client'
 import { prisma } from '~/services/prisma.server'
 import { fetchRssFeed } from '~/services/rss.server'
 
-export const syncRssEntries = async (
-  podcastChannelId: PodcastChannel['id'],
-) => {
+export const syncRssEntries = async (podcastId: Podcast['id']) => {
   const feeds = await prisma.rssFeed.findMany({
-    where: { podcastChannelId },
+    where: { podcastId },
   })
   if (feeds.length === 0) {
     throw new Error('No feed found for the given podcast channel')
@@ -23,12 +21,12 @@ export const syncRssEntries = async (
   for (const feed of feeds) {
     const feedData = await fetchRssFeed(feed.link)
     const rssFeed = await prisma.rssFeed.upsert({
-      where: { link: feed.link, podcastChannelId },
+      where: { link: feed.link, podcastId },
       create: {
         link: feed.link,
         title: feedData.title,
         description: feedData.description,
-        podcastChannelId,
+        podcastId,
       },
       update: {
         title: feedData.title,

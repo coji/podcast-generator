@@ -8,10 +8,10 @@ import {
   Stack,
 } from '~/components/ui'
 import type { Route } from './+types/route'
-import { listPodcastChannels } from './queries.server'
+import { listPodcasts } from './queries.server'
 
 export const loader = async () => {
-  const channels = await listPodcastChannels('testuser')
+  const channels = await listPodcasts('testuser')
   if (channels.length === 1) {
     //    throw redirect(`/podcast/${channels[0].id}/feed`)
   }

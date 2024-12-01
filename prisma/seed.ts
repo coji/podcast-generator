@@ -4,11 +4,15 @@ import { testFeed } from './test-feed'
 const prisma = new PrismaClient()
 
 const feed = async () => {
-  const user = await prisma.user.create({ data: { name: 'coji' } })
-  const podcastChannel = await prisma.podcastChannel.create({
+  const user = await prisma.user.create({
+    data: { name: 'coji', email: 'coji@techtalk.jp' },
+  })
+  const podcast = await prisma.podcast.create({
     data: {
       userId: user.id,
       title: 'アグレッシブちゃんもも Podcast',
+      link: 'https://example.com',
+      categoryId: 'Entrepreneurship',
       description: 'ちゃんももポッドキャストです',
     },
   })
@@ -17,7 +21,7 @@ const feed = async () => {
       title: testFeed.title,
       description: testFeed.description,
       link: testFeed.link,
-      podcastChannelId: podcastChannel.id,
+      podcastId: podcast.id,
     },
   })
   for (const entry of testFeed.items) {
