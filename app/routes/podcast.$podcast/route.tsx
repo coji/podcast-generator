@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router'
+import { NavLink, Outlet } from 'react-router'
 import {
   HStack,
   Select,
@@ -39,6 +39,21 @@ export default function PodcastLayout({
               </SelectContent>
             </Select>
           </div>
+
+          <HStack className="gap-2 rounded-md bg-slate-200 p-1 text-sm font-medium">
+            <NavLink
+              to="feed"
+              className="rounded-md px-3 py-1 ring-offset-background aria-[current]:bg-card aria-[current]:shadow"
+            >
+              Sources
+            </NavLink>
+            <NavLink
+              to="episodes"
+              className="rounded-md px-3 py-1 ring-offset-background aria-[current]:bg-card aria-[current]:shadow"
+            >
+              Episodes
+            </NavLink>
+          </HStack>
         </HStack>
       </header>
 

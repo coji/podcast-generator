@@ -8,9 +8,6 @@ import {
   CardHeader,
   CardTitle,
   HStack,
-  Tabs,
-  TabsList,
-  TabsTrigger,
   Textarea,
 } from '~/components/ui'
 import { responseSchema } from '~/routes/api.podcast-generate/route'
@@ -33,19 +30,8 @@ export default function EntryIndex({
   return (
     <Card key={entry.id} className="flex h-full flex-col">
       <CardHeader>
-        <HStack>
-          <div className="flex-1">
-            <CardTitle>{entry.title}</CardTitle>
-            <CardDescription />
-          </div>
-
-          <Tabs defaultValue="source">
-            <TabsList>
-              <TabsTrigger value="source">エントリ 原文</TabsTrigger>
-              <TabsTrigger value="manuscript">Podcast 原稿</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </HStack>
+        <CardTitle>{entry.title}</CardTitle>
+        <CardDescription>{entry.RssFeed.title}</CardDescription>
       </CardHeader>
 
       <CardContent className="flex flex-1">
