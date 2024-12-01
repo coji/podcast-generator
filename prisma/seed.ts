@@ -10,6 +10,7 @@ const feed = async () => {
   const podcast = await prisma.podcast.create({
     data: {
       userId: user.id,
+      slug: 'chanmomo',
       title: 'アグレッシブちゃんもも Podcast',
       link: 'https://example.com',
       categoryId: 'Entrepreneurship',
@@ -32,6 +33,7 @@ const feed = async () => {
         title: entry.title,
         content: entry.content,
         publishedAt: new Date(entry.pubDate),
+        isNew: false,
       },
     })
   }

@@ -10,6 +10,7 @@ CREATE TABLE "users" (
 -- CreateTable
 CREATE TABLE "podcasts" (
     "id" TEXT NOT NULL PRIMARY KEY,
+    "slug" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
@@ -90,6 +91,9 @@ CREATE TABLE "episode_sources" (
     CONSTRAINT "episode_sources_episode_id_fkey" FOREIGN KEY ("episode_id") REFERENCES "episodes" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "episode_sources_rss_entry_id_fkey" FOREIGN KEY ("rss_entry_id") REFERENCES "rss_entries" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "podcasts_slug_key" ON "podcasts"("slug");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "rss_feeds_link_key" ON "rss_feeds"("link");

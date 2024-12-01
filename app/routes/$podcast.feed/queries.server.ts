@@ -1,8 +1,10 @@
-import type { Podcast, User } from '@prisma/client'
+import type { Podcast } from '@prisma/client'
 import { prisma } from '~/services/prisma.server'
 
-export const getPodcastChannelId = async (userId: User['id']) => {
-  return await prisma.podcast.findFirstOrThrow()
+export const getPodcast = async (slug: Podcast['slug']) => {
+  return await prisma.podcast.findFirstOrThrow({
+    where: { slug },
+  })
 }
 
 export const listRssEntries = async (podcastId: Podcast['id']) => {

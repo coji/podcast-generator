@@ -1,18 +1,18 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router'
-import { data, NavLink, Outlet, useFetcher, useLoaderData } from 'react-router'
+import { data, NavLink, Outlet, useFetcher } from 'react-router'
 import { dataWithSuccess } from 'remix-toast'
 import { RssEntry } from '~/components/RssEntry'
 import { Button, HStack, Stack } from '~/components/ui'
+import type { Route } from './+types/route'
 import { syncRssEntries } from './functions.server'
-import { getPodcastChannelId, listRssEntries } from './queries.server'
+import { getPodcast, listRssEntries } from './queries.server'
 
-export const loader = async (args: LoaderFunctionArgs) => {
-  const podcastChannel = await getPodcastChannelId('testuser')
-  const entries = await listRssEntries(podcastChannel.id)
-  return { entries }
+export const loader = async ({ params }: Route.LoaderArgs) => {
+  const podcast = await getPodcast(params.podcast)
+  const entries = await listRssEntries(podcast.id)
+  return { podcast, entries }
 }
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ params }: Route.ActionArgs) => {
   if (!params.podcast) {
     throw data('Not Found', { status: 404 })
   }
@@ -20,18 +20,19 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   return dataWithSuccess(
     { success: true },
     {
-      message: 'sync success',
+      message: 'sync succeded',
       description: `added: ${added.length}, updated: ${updated.length}`,
     },
   )
 }
 
-export default function PodcastManager() {
-  const { entries } = useLoaderData<typeof loader>()
+export default function PodcastManager({
+  loaderData: { podcast, entries },
+}: Route.ComponentProps) {
   const fetcher = useFetcher<typeof action>()
 
   return (
-    <>
+    <div className="grid overflow-hidden md:grid-cols-[minmax(0,300px),minmax(0,1fr)]">
       <Stack className="overflow-y-auto pr-4">
         <HStack>
           <h2 className="flex-1 text-xl font-semibold">Feed Entries</h2>
@@ -65,6 +66,6 @@ export default function PodcastManager() {
       <Stack className="overflow-auto">
         <Outlet />
       </Stack>
-    </>
+    </div>
   )
 }

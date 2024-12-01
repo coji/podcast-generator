@@ -11,30 +11,30 @@ import type { Route } from './+types/route'
 import { listPodcasts } from './queries.server'
 
 export const loader = async () => {
-  const channels = await listPodcasts('testuser')
-  if (channels.length === 1) {
+  const podcasts = await listPodcasts('testuser')
+  if (podcasts.length === 1) {
     //    throw redirect(`/podcast/${channels[0].id}/feed`)
   }
-  return { channels }
+  return { podcasts }
 }
 
 export default function IndexPage({
-  loaderData: { channels },
+  loaderData: { podcasts },
 }: Route.ComponentProps) {
   return (
     <div>
       <Stack>
-        {channels.map((channel) => (
-          <Link key={channel.id} to={`/podcast/${channel.id}/feed`}>
+        {podcasts.map((podcast) => (
+          <Link key={podcast.id} to={`/${podcast.slug}/feed`}>
             <Card>
               <CardHeader>
-                <CardTitle>{channel.title}</CardTitle>
+                <CardTitle>{podcast.title}</CardTitle>
                 <CardDescription>
-                  {channel.updatedAt.toISOString()}
+                  {podcast.updatedAt.toISOString()}
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p>{channel.description}</p>
+                <p>{podcast.description}</p>
               </CardContent>
             </Card>
           </Link>

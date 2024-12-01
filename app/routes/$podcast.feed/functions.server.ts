@@ -2,7 +2,11 @@ import type { Podcast, RssEntry } from '@prisma/client'
 import { prisma } from '~/services/prisma.server'
 import { fetchRssFeed } from '~/services/rss.server'
 
-export const syncRssEntries = async (podcastId: Podcast['id']) => {
+export const syncRssEntries = async (slug: Podcast['slug']) => {
+  const { id: podcastId } = await prisma.podcast.findFirstOrThrow({
+    select: { id: true },
+    where: { slug },
+  })
   const feeds = await prisma.rssFeed.findMany({
     where: { podcastId },
   })

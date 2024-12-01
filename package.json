@@ -7,6 +7,9 @@
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc --build --noEmit",
+    "lint": "biome lint .",
+    "format": "prettier --check .",
+    "validate": "run-s lint format typecheck",
     "engine:start": "pm2 start /Applications/AivisSpeech.app/Contents/Resources/AivisSpeech-Engine/run --name engine",
     "engine:stop": "pm2 stop engine"
   },
@@ -60,6 +63,7 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "autoprefixer": "^10.4.20",
+    "npm-run-all": "^4.1.5",
     "pm2": "^5.4.3",
     "postcss": "^8.4.49",
     "prettier": "^3.4.1",
