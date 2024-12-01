@@ -33,8 +33,8 @@ export default function PodcastManager({
 
   return (
     <div className="grid overflow-hidden md:grid-cols-[300px,minmax(0,1fr)]">
-      <Stack className="overflow-y-auto pr-4">
-        <HStack>
+      <div className="relative overflow-y-auto md:pr-4">
+        <HStack className="sticky top-0 bg-slate-200 pb-2">
           <h2 className="flex-1 text-xl font-semibold">Feed Entries</h2>
           <fetcher.Form method="POST">
             <Button
@@ -47,21 +47,23 @@ export default function PodcastManager({
           </fetcher.Form>
         </HStack>
 
-        {entries.map((entry) => (
-          <NavLink
-            key={entry.id}
-            to={entry.id}
-            preventScrollReset
-            className="group"
-          >
-            <RssEntry
-              entry={entry}
-              feedTitle={entry.RssFeed.title}
-              className="group-aria-[current]:bg-accent group-aria-[current]:text-accent-foreground"
-            />
-          </NavLink>
-        ))}
-      </Stack>
+        <Stack>
+          {entries.map((entry) => (
+            <NavLink
+              key={entry.id}
+              to={entry.id}
+              preventScrollReset
+              className="group"
+            >
+              <RssEntry
+                entry={entry}
+                feedTitle={entry.RssFeed.title}
+                className="group-aria-[current]:bg-accent group-aria-[current]:text-accent-foreground"
+              />
+            </NavLink>
+          ))}
+        </Stack>
+      </div>
 
       <Stack className="overflow-auto">
         <Outlet />
