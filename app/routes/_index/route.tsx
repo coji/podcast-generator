@@ -25,7 +25,7 @@ export default function IndexPage({
     <div>
       <Stack>
         {podcasts.map((podcast) => (
-          <Link key={podcast.id} to={`/${podcast.slug}/feed`}>
+          <Link key={podcast.id} to={`/${podcast.slug}/episodes`}>
             <Card>
               <CardHeader>
                 <CardTitle>{podcast.title}</CardTitle>

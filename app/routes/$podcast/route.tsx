@@ -42,16 +42,16 @@ export default function PodcastLayout({
 
           <HStack className="gap-2 rounded-md bg-slate-200 p-1 text-sm font-medium">
             <NavLink
-              to="feed"
-              className="rounded-md px-3 py-1 ring-offset-background aria-[current]:bg-card aria-[current]:shadow"
-            >
-              Sources
-            </NavLink>
-            <NavLink
               to="episodes"
               className="rounded-md px-3 py-1 ring-offset-background aria-[current]:bg-card aria-[current]:shadow"
             >
               Episodes
+            </NavLink>
+            <NavLink
+              to="feed"
+              className="rounded-md px-3 py-1 ring-offset-background aria-[current]:bg-card aria-[current]:shadow"
+            >
+              Sources
             </NavLink>
           </HStack>
         </HStack>
