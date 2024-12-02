@@ -69,7 +69,7 @@ ${entries
   console.log('prompt', prompt)
 
   const result = await streamObject({
-    model: openai('gpt-4o'),
+    model: openai('gpt-4o-mini'),
     schema: responseSchema,
     prompt,
     onFinish: (event) => {
