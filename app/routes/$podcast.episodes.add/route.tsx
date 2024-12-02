@@ -7,6 +7,7 @@ import {
 } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import { useEffect } from 'react'
+import { Form } from 'react-router'
 import { z } from 'zod'
 import {
   Button,
@@ -28,14 +29,22 @@ import {
 } from '~/components/ui'
 import { MultiSelect } from '~/components/ui/multi-select'
 import { responseSchema } from '../api.podcast-generate/route'
+import type { Route } from './+types/route'
 
 const schema = z.object({
+  episodeSources: z.array(z.string()),
   title: z.string(),
   description: z.string(),
   manuscript: z.string(),
-  image: z.string(),
-  bgm: z.string(),
+  image: z.instanceof(File).optional(),
+  bgm: z.string().optional(),
 })
+
+export const action = async ({ request }: Route.ActionArgs) => {
+  const submission = parseWithZod(await request.formData(), { schema })
+  console.log(submission)
+  return { lastResult: submission.reply() }
+}
 
 export default function EpisodeNewPage() {
   const { isLoading, object, stop, submit, error } = useObject({
@@ -75,7 +84,7 @@ export default function EpisodeNewPage() {
         <CardDescription />
       </CardHeader>
       <CardContent>
-        <form {...getFormProps(form)}>
+        <Form method="POST" {...getFormProps(form)}>
           <Stack>
             {/* episode sources */}
             <div>
@@ -168,8 +177,11 @@ export default function EpisodeNewPage() {
                 </SelectContent>
               </Select>
             </div>
+            <Button type="submit">新規作成</Button>
+
+            <div>{JSON.stringify(form.allErrors)}a</div>
           </Stack>
-        </form>
+        </Form>
       </CardContent>
     </Card>
   )
