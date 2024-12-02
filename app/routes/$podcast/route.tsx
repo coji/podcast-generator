@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from 'react-router'
+import { Link, NavLink, Outlet } from 'react-router'
 import {
   HStack,
   Select,
@@ -23,7 +23,9 @@ export default function PodcastLayout({
     <div className="grid h-dvh grid-cols-1 grid-rows-[auto,1fr]">
       <header className="px-4 py-2">
         <HStack>
-          <h1 className="flex-1 text-2xl font-bold">Podcast Manager</h1>
+          <h1 className="flex-1 text-2xl font-bold">
+            <Link to="/">Podcast Manager</Link>
+          </h1>
 
           <div>
             <Select defaultValue={podcast?.id}>

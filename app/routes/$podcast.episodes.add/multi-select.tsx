@@ -1,8 +1,15 @@
-import { X } from 'lucide-react'
 import * as React from 'react'
 
 import { Command as CommandPrimitive } from 'cmdk'
-import { Badge } from '~/components/ui/badge'
+import { XIcon } from 'lucide-react'
+import {
+  Button,
+  HStack,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+} from '~/components/ui'
 import {
   Command,
   CommandGroup,
@@ -22,6 +29,7 @@ export function MultiSelect({
   options: Option[]
   placeholder?: string
   name?: string
+  onChangeSelected?: (selected: Option[]) => void
 }) {
   const inputRef = React.useRef<HTMLInputElement>(null)
   const [open, setOpen] = React.useState(false)
@@ -57,37 +65,13 @@ export function MultiSelect({
   const selectables = options.filter((option) => !selected.includes(option))
 
   return (
-    <>
+    <div className="w-full">
       <Command
         onKeyDown={handleKeyDown}
         className="overflow-visible bg-transparent"
       >
         <div className="group rounded-md border border-input px-3 py-2 text-sm ring-offset-background focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-0">
           <div className="flex flex-wrap gap-1">
-            {selected.map((option) => {
-              return (
-                <Badge key={option.value} variant="secondary">
-                  {option.label}
-                  <button
-                    type="button"
-                    className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        handleUnselect(option)
-                      }
-                    }}
-                    onMouseDown={(e) => {
-                      e.preventDefault()
-                      e.stopPropagation()
-                    }}
-                    onClick={() => handleUnselect(option)}
-                  >
-                    <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
-                  </button>
-                </Badge>
-              )
-            })}
-            {/* Avoid having the "Search" Icon */}
             <CommandPrimitive.Input
               ref={inputRef}
               value={inputValue}
@@ -129,6 +113,35 @@ export function MultiSelect({
         </div>
       </Command>
 
+      {selected.length > 0 && (
+        <div className="rounded-md border">
+          <Table>
+            <TableBody>
+              {selected.map((option) => (
+                <TableRow key={option.value}>
+                  <TableCell>
+                    <HStack>
+                      <div className="flex-1">{option.label}</div>
+                      <Button
+                        type="button"
+                        variant="link"
+                        size="icon"
+                        className="h-4 w-4 p-0"
+                        onClick={() => {
+                          handleUnselect(option)
+                        }}
+                      >
+                        <XIcon size="12" />
+                      </Button>
+                    </HStack>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
+
       {name &&
         selected.map((option, idx) => (
           <input
@@ -138,6 +151,6 @@ export function MultiSelect({
             value={option.value}
           />
         ))}
-    </>
+    </div>
   )
 }

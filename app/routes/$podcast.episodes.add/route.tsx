@@ -7,7 +7,7 @@ import {
 } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import { useEffect } from 'react'
-import { Form } from 'react-router'
+import { data, Form } from 'react-router'
 import { z } from 'zod'
 import {
   Button,
@@ -27,9 +27,10 @@ import {
   Stack,
   Textarea,
 } from '~/components/ui'
-import { MultiSelect } from '~/components/ui/multi-select'
+import { MultiSelect } from '~/routes/$podcast.episodes.add/multi-select'
 import { responseSchema } from '../api.podcast-generate/route'
 import type { Route } from './+types/route'
+import { listRssEntries } from './queries.server'
 
 const schema = z.object({
   episodeSources: z.array(z.string()),
@@ -40,13 +41,24 @@ const schema = z.object({
   bgm: z.string().optional(),
 })
 
+export const loader = async ({ params }: Route.LoaderArgs) => {
+  const sources = await listRssEntries(params.podcast)
+  if (!sources) {
+    throw data(null, { status: 404 })
+  }
+  console.log({ sources })
+  return { sources }
+}
+
 export const action = async ({ request }: Route.ActionArgs) => {
   const submission = parseWithZod(await request.formData(), { schema })
   console.log(submission)
   return { lastResult: submission.reply() }
 }
 
-export default function EpisodeNewPage() {
+export default function EpisodeNewPage({
+  loaderData: { sources },
+}: Route.ComponentProps) {
   const { isLoading, object, stop, submit, error } = useObject({
     api: '/api/podcast-generate',
     schema: responseSchema,
@@ -91,10 +103,10 @@ export default function EpisodeNewPage() {
               <Label>エピソード元エントリ</Label>
               <HStack className="items-start">
                 <MultiSelect
-                  options={[
-                    { label: 'hoge', value: 'hoge' },
-                    { label: 'fuga', value: 'fuga' },
-                  ]}
+                  options={sources.map((source) => ({
+                    label: source.title,
+                    value: source.id,
+                  }))}
                 />
 
                 <Button
