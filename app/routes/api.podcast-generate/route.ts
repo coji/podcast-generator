@@ -66,15 +66,17 @@ ${entries
   .join('\n\n')}
 `
 
-  console.log('prompt', prompt)
-
   const result = await streamObject({
     model: openai('gpt-4o-mini'),
     schema: responseSchema,
     prompt,
-    onFinish: (event) => {
-      console.log(event.object)
-    },
+    // onFinish: (event) => {
+    //   const priceInput = (event.usage.promptTokens * 0.00015) / 1000
+    //   const priceOutput = (event.usage.completionTokens * 0.0006) / 1000
+    //   const totalPrice = (priceInput + priceOutput) * 150
+
+    //   console.log(event.object, totalPrice)
+    // },
   })
   return result.toTextStreamResponse()
 }

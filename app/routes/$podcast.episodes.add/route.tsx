@@ -1,5 +1,14 @@
 import { experimental_useObject as useObject } from '@ai-sdk/react'
 import {
+  getFormProps,
+  getInputProps,
+  getTextareaProps,
+  useForm,
+} from '@conform-to/react'
+import { parseWithZod } from '@conform-to/zod'
+import { useEffect } from 'react'
+import { z } from 'zod'
+import {
   Button,
   Card,
   CardContent,
@@ -20,11 +29,44 @@ import {
 import { MultiSelect } from '~/components/ui/multi-select'
 import { responseSchema } from '../api.podcast-generate/route'
 
+const schema = z.object({
+  title: z.string(),
+  description: z.string(),
+  manuscript: z.string(),
+  image: z.string(),
+  bgm: z.string(),
+})
+
 export default function EpisodeNewPage() {
   const { isLoading, object, stop, submit, error } = useObject({
     api: '/api/podcast-generate',
     schema: responseSchema,
   })
+  const [form, fields] = useForm({
+    onValidate: ({ formData }) => parseWithZod(formData, { schema }),
+  })
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (object?.title !== fields.title.value) {
+      form.update({
+        name: fields.title.name,
+        value: object?.title ?? '',
+      })
+    }
+    if (object?.description !== fields.description.value) {
+      form.update({
+        name: fields.description.name,
+        value: object?.description ?? '',
+      })
+    }
+    if (object?.manuscript !== fields.manuscript.value) {
+      form.update({
+        name: fields.manuscript.name,
+        value: object?.manuscript ?? '',
+      })
+    }
+  }, [object])
 
   return (
     <Card className="flex-1">
@@ -33,18 +75,19 @@ export default function EpisodeNewPage() {
         <CardDescription />
       </CardHeader>
       <CardContent>
-        <form>
+        <form {...getFormProps(form)}>
           <Stack>
             {/* episode sources */}
             <div>
               <Label>エピソード元エントリ</Label>
-              <HStack className="items-center">
+              <HStack className="items-start">
                 <MultiSelect
                   options={[
                     { label: 'hoge', value: 'hoge' },
                     { label: 'fuga', value: 'fuga' },
                   ]}
                 />
+
                 <Button
                   type="button"
                   onClick={() => {
@@ -60,38 +103,64 @@ export default function EpisodeNewPage() {
                 >
                   原稿を生成
                 </Button>
+
+                {isLoading && (
+                  <Button
+                    type="button"
+                    variant="link"
+                    onClick={() => stop()}
+                    className="flex-shrink-0"
+                  >
+                    キャンセル
+                  </Button>
+                )}
               </HStack>
             </div>
 
             {/* title */}
             <div>
               <Label>タイトル</Label>
-              <Input />
+              <Input
+                {...getInputProps(fields.title, { type: 'text' })}
+                key={fields.title.key}
+                disabled={isLoading}
+              />
             </div>
 
             {/* description */}
             <div>
               <Label>概要</Label>
-              <Input />
+              <Input
+                {...getInputProps(fields.description, { type: 'text' })}
+                key={fields.description.key}
+                disabled={isLoading}
+              />
             </div>
 
             {/* manuscript */}
             <div>
               <Label>原稿</Label>
-              <Textarea />
+              <Textarea
+                {...getTextareaProps(fields.manuscript)}
+                key={fields.manuscript.key}
+                disabled={isLoading}
+              />
             </div>
 
             {/* image */}
             <div>
               <Label>イメージ</Label>
-              <Input type="file" />
+              <Input {...getInputProps(fields.image, { type: 'file' })} />
             </div>
 
             {/* background music */}
             <div>
               <Label>BGM</Label>
-              <Select>
-                <SelectTrigger>
+              <Select
+                name={fields.bgm.name}
+                defaultValue={fields.bgm.initialValue}
+              >
+                <SelectTrigger id={fields.bgm.id}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
