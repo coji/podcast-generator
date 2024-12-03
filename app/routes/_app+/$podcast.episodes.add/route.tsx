@@ -27,8 +27,8 @@ import {
   Stack,
   Textarea,
 } from '~/components/ui'
-import { SourceSelector } from '~/routes/$podcast.feed.selector/SourceSelector'
-import { responseSchema } from '../api.podcast-generate/route'
+import { SourceSelector } from '~/routes/_app+/$podcast.feed.selector/SourceSelector'
+import { responseSchema } from '../../api.podcast-generate/route'
 import type { Route } from './+types/route'
 
 const schema = z.object({
