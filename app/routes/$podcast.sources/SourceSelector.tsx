@@ -1,4 +1,3 @@
-import { Command as CommandPrimitive } from 'cmdk'
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
 import { XIcon } from 'lucide-react'
@@ -6,18 +5,20 @@ import * as React from 'react'
 import { useFetcher } from 'react-router'
 import {
   Button,
+  Command,
+  CommandGroup,
+  CommandItem,
+  CommandList,
   HStack,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Stack,
   Table,
   TableBody,
   TableCell,
   TableRow,
 } from '~/components/ui'
-import {
-  Command,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-} from '~/components/ui/command'
 import type { loader } from './route'
 
 type Option = { value: string; label: string; publishedAt: Date }
@@ -35,9 +36,9 @@ export function SourceSelector({
   name?: string
   onChangeSelected?: (selected: Option[]) => void
 }) {
+  const [open, setOpen] = React.useState<boolean>(false)
   const fetcher = useFetcher<typeof loader>()
   const inputRef = React.useRef<HTMLInputElement>(null)
-  const [open, setOpen] = React.useState(false)
   const [inputValue, setInputValue] = React.useState('')
 
   const handleUnselect = React.useCallback(
@@ -82,29 +83,27 @@ export function SourceSelector({
   }, [])
 
   return (
-    <div className="w-full">
-      <Command
-        onKeyDown={handleKeyDown}
-        className="overflow-visible bg-transparent"
-      >
-        <div className="group rounded-md border border-input px-3 py-2 text-sm ring-offset-background focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-0">
-          <div className="flex flex-wrap gap-1">
-            <CommandPrimitive.Input
-              ref={inputRef}
-              value={inputValue}
-              onValueChange={setInputValue}
-              onBlur={() => setOpen(false)}
-              onFocus={() => setOpen(true)}
-              placeholder={placeholder}
-              className="ml-2 flex-1 bg-transparent outline-none placeholder:text-muted-foreground"
-            />
-          </div>
-        </div>
-        <div className="relative mt-2">
-          <CommandList>
-            {open && selectables.length > 0 ? (
-              <div className="absolute top-0 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
-                <CommandGroup className="h-full overflow-auto">
+    <Stack className="w-full">
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full flex-1 text-sm"
+            onClick={() => setOpen(true)}
+          >
+            {selected.length === 0
+              ? (placeholder ?? 'エピソード元エントリを選択')
+              : `${selected.length} 件選択済`}
+          </Button>
+        </PopoverTrigger>
+
+        <PopoverContent>
+          <div>hoge</div>
+          <Command>
+            <CommandList>
+              {open && selectables.length > 0 && (
+                <CommandGroup>
                   {selectables.map((option) => {
                     return (
                       <CommandItem
@@ -117,23 +116,23 @@ export function SourceSelector({
                           setInputValue('')
                           onChangeSelected?.([...selected, option])
                         }}
-                        className={'cursor-pointer'}
+                        className={'grid cursor-pointer grid-cols-[100px,1fr]'}
                       >
-                        <span className="mr-2 text-xs font-medium text-muted-foreground">
+                        <div className="mr-2 text-xs font-medium text-muted-foreground">
                           {format(option.publishedAt, 'yyyy-MM-dd(ccc)', {
                             locale: ja,
                           })}
-                        </span>
-                        {option.label}
+                        </div>
+                        <div>{option.label}</div>
                       </CommandItem>
                     )
                   })}
                 </CommandGroup>
-              </div>
-            ) : null}
-          </CommandList>
-        </div>
-      </Command>
+              )}
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
 
       {selected.length > 0 && (
         <div className="rounded-md border">
@@ -180,6 +179,6 @@ export function SourceSelector({
             value={option.value}
           />
         ))}
-    </div>
+    </Stack>
   )
 }
