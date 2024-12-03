@@ -38,9 +38,10 @@ model Podcast {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
 
-  User     User      @relation(fields: [userId], references: [id])
-  RssFeed  RssFeed[]
-  Episode  Episode[]
+  User            User              @relation(fields: [userId], references: [id])
+  RssFeed         RssFeed[]
+  Episode         Episode[]
+  BackgroundMusic BackgroundMusic[]
 
   @@map("podcasts")
 }
@@ -79,6 +80,7 @@ model RssEntry {
 
 model BackgroundMusic {
   id          String   @id @default(uuid())
+  podcastId   String   @map("podcast_id")
   name        String
   description String
   audioFile   String   @map("audio_file")
@@ -86,6 +88,7 @@ model BackgroundMusic {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
 
+  Podcast Podcast   @relation(fields: [podcastId], references: [id])
   Episode Episode[]
 
   @@map("background_musics")

@@ -135,4 +135,7 @@
       'rlig' 1,
       'calt' 1;
   }
+  textarea {
+    field-sizing: content;
+  }
 }

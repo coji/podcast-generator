@@ -37,7 +37,7 @@ export default function EntryIndex({
         <HStack>
           <Button type="button" asChild>
             <Link to={`/${params.podcast}/episodes/add?source=${entry.id}`}>
-              原稿を生成
+              この記事を元にエピソードを生成
             </Link>
           </Button>
         </HStack>

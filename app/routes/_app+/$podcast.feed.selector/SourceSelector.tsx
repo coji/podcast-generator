@@ -21,15 +21,17 @@ import {
 } from '~/components/ui'
 import type { loader } from './route'
 
-type Option = { value: string; label: string; publishedAt: Date }
+type Option = { id: string; title: string; publishedAt: Date }
 
 export function SourceSelector({
+  id,
   podcastSlug,
   selected,
   placeholder,
   name,
   onChangeSelected,
 }: {
+  id?: string
   podcastSlug: string
   selected: Option[]
   placeholder?: string
@@ -41,19 +43,15 @@ export function SourceSelector({
 
   const handleUnselect = React.useCallback(
     (option: Option) => {
-      onChangeSelected?.([...selected].filter((s) => s.value !== option.value))
+      onChangeSelected?.([...selected].filter((s) => s.id !== option.id))
     },
     [onChangeSelected, selected],
   )
 
   const selectables =
-    fetcher.data?.sources
-      .filter((source) => !selected.some((s) => s.value === source.id))
-      .map((option) => ({
-        value: option.id,
-        label: option.title,
-        publishedAt: option.publishedAt,
-      })) ?? []
+    fetcher.data?.sources.filter(
+      (source) => !selected.some((s) => s.id === source.id),
+    ) ?? []
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   React.useEffect(() => {
@@ -65,19 +63,19 @@ export function SourceSelector({
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
+            id={id}
             type="button"
             variant="outline"
-            className="w-full flex-1 text-sm"
+            className="text-sm"
             onClick={() => setOpen(true)}
           >
             {selected.length === 0
-              ? (placeholder ?? 'エピソード元エントリを選択')
-              : `${selected.length} 件選択済`}
+              ? (placeholder ?? 'エピソード元記事を選択')
+              : `${selected.length} 記事選択済`}
           </Button>
         </PopoverTrigger>
 
-        <PopoverContent>
-          <div>hoge</div>
+        <PopoverContent className="min-w-[350px]">
           <Command>
             <CommandList>
               {open && selectables.length > 0 && (
@@ -85,13 +83,14 @@ export function SourceSelector({
                   {selectables.map((option) => {
                     return (
                       <CommandItem
-                        key={option.value}
+                        key={option.id}
                         onMouseDown={(e) => {
                           e.preventDefault()
                           e.stopPropagation()
                         }}
                         onSelect={(value) => {
                           onChangeSelected?.([...selected, option])
+                          setOpen(false)
                         }}
                         className={'grid cursor-pointer grid-cols-[100px,1fr]'}
                       >
@@ -100,7 +99,7 @@ export function SourceSelector({
                             locale: ja,
                           })}
                         </div>
-                        <div>{option.label}</div>
+                        <div>{option.title}</div>
                       </CommandItem>
                     )
                   })}
@@ -116,7 +115,7 @@ export function SourceSelector({
           <Table>
             <TableBody>
               {selected.map((option) => (
-                <TableRow key={option.value}>
+                <TableRow key={option.id}>
                   <TableCell>
                     <HStack>
                       <div className="flex-1">
@@ -125,7 +124,7 @@ export function SourceSelector({
                             locale: ja,
                           })}
                         </span>
-                        {option.label}
+                        {option.title}
                       </div>
                       <Button
                         type="button"
@@ -146,16 +145,6 @@ export function SourceSelector({
           </Table>
         </div>
       )}
-
-      {name &&
-        selected.map((option, idx) => (
-          <input
-            key={option.value}
-            type="hidden"
-            name={`${name}[${idx}]`}
-            value={option.value}
-          />
-        ))}
     </Stack>
   )
 }
