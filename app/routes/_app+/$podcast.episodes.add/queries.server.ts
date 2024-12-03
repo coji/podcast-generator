@@ -19,3 +19,9 @@ export const listBackgroundMusics = async (slug: string) => {
     },
   })
 }
+
+export const getPodcast = async (slug: string) => {
+  return await prisma.podcast.findUniqueOrThrow({
+    where: { slug },
+  })
+}

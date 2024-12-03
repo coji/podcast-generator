@@ -33,6 +33,7 @@ model Podcast {
   description String
   link        String
   image       String?
+  speaker     String
   language    String   @default("ja")
   categoryId  String   @map("category_id")
   createdAt   DateTime @default(now()) @map("created_at")

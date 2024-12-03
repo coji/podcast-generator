@@ -47,6 +47,7 @@
     "date-fns": "^4.1.0",
     "isbot": "^5.1.17",
     "lucide-react": "^0.462.0",
+    "neverthrow": "^8.1.1",
     "next-themes": "^0.4.3",
     "openai": "^4.73.1",
     "react": "^18.3.1",
@@ -60,7 +61,8 @@
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8",
-    "zodix": "^0.4.4"
+    "zodix": "^0.4.4",
+    "zx": "^8.2.4"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",

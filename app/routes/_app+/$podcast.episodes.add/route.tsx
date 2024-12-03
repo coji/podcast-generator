@@ -29,10 +29,11 @@ import {
   Stack,
   Textarea,
 } from '~/components/ui'
+import { generatePodcastAudio } from '~/jobs/build-podcast-episode' // Import the new function
 import { SourceSelector } from '~/routes/_app+/$podcast.feed.selector/SourceSelector'
 import { responseSchema } from '../../api.podcast-generate/route'
 import type { Route } from './+types/route'
-import { listBackgroundMusics, listSources } from './queries.server'
+import { getPodcast, listBackgroundMusics, listSources } from './queries.server'
 
 const schema = z.object({
   sources: z.array(z.string()).min(1, { message: '元記事を選択してください' }),
@@ -57,10 +58,24 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return { bgms, initialSources }
 }
 
-export const action = async ({ request }: Route.ActionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const submission = parseWithZod(await request.formData(), { schema })
-  console.log(submission)
-  return { lastResult: submission.reply() }
+  if (submission.status !== 'success') {
+    return { lastResult: submission.reply() }
+  }
+
+  const podcast = await getPodcast(params.podcast)
+
+  // Call the new audio generation function
+  const audioFile = await generatePodcastAudio({
+    speaker: podcast.speaker, // Use the podcast speaker
+    text: submission.value.manuscript,
+    userId: podcast.userId,
+    podcastSlug: params.podcast,
+    isTest: true,
+  })
+
+  return { lastResult: submission.reply(), audioFile } // Return the filename
 }
 
 export default function EpisodeNewPage({
@@ -104,6 +119,19 @@ export default function EpisodeNewPage({
     React.useState<{ id: string; title: string; publishedAt: Date }[]>(
       initialSources,
     )
+
+  // Helper function to format minutes
+  const formatMinutes = (seconds: number): string =>
+    `${Math.floor(seconds / 60)}分`
+
+  // Helper function to format seconds
+  const formatSeconds = (seconds: number): string => `${seconds % 60}秒`
+
+  // Refactored formatDuration function
+  const formatDuration = (seconds: number): string =>
+    seconds < 60
+      ? formatSeconds(seconds)
+      : `${formatMinutes(seconds)}${formatSeconds(seconds)}`
 
   return (
     <Card className="flex flex-1 flex-col">
@@ -222,7 +250,7 @@ export default function EpisodeNewPage({
                 <SelectContent>
                   {bgms.map((bgm) => (
                     <SelectItem key={bgm.id} value={bgm.id}>
-                      {bgm.name}
+                      {bgm.name} ({formatDuration(bgm.duration)})
                     </SelectItem>
                   ))}
                 </SelectContent>
