@@ -112,6 +112,7 @@ export default function EpisodeNewPage({
 
                 <Button
                   type="button"
+                  disabled={selected.length === 0}
                   onClick={() => {
                     submit({
                       entryIds: selected.map((option) => option.value),
