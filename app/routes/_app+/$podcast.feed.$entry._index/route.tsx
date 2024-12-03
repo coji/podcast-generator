@@ -1,3 +1,4 @@
+import { Link } from 'react-router'
 import {
   Button,
   Card,
@@ -19,6 +20,7 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
 
 export default function EntryIndex({
   loaderData: { entry },
+  params,
 }: Route.ComponentProps) {
   return (
     <Card key={entry.id} className="flex h-full flex-col">
@@ -33,7 +35,11 @@ export default function EntryIndex({
 
       <CardFooter>
         <HStack>
-          <Button type="button">原稿を生成</Button>
+          <Button type="button" asChild>
+            <Link to={`/${params.podcast}/episodes/add?source=${entry.id}`}>
+              原稿を生成
+            </Link>
+          </Button>
         </HStack>
       </CardFooter>
     </Card>
