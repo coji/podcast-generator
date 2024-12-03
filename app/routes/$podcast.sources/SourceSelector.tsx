@@ -3,6 +3,7 @@ import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
 import { XIcon } from 'lucide-react'
 import * as React from 'react'
+import { useFetcher } from 'react-router'
 import {
   Button,
   HStack,
@@ -17,31 +18,33 @@ import {
   CommandItem,
   CommandList,
 } from '~/components/ui/command'
+import type { loader } from './route'
 
 type Option = { value: string; label: string; publishedAt: Date }
 
-export function MultiSelect({
+export function SourceSelector({
+  podcastSlug,
   selected,
-  options,
   placeholder,
   name,
   onChangeSelected,
 }: {
+  podcastSlug: string
   selected: Option[]
-  options: Option[]
   placeholder?: string
   name?: string
   onChangeSelected?: (selected: Option[]) => void
 }) {
+  const fetcher = useFetcher<typeof loader>()
   const inputRef = React.useRef<HTMLInputElement>(null)
   const [open, setOpen] = React.useState(false)
   const [inputValue, setInputValue] = React.useState('')
 
   const handleUnselect = React.useCallback(
     (option: Option) => {
-      onChangeSelected?.(selected.filter((s) => s.value !== option.value))
+      onChangeSelected?.([...selected].filter((s) => s.value !== option.value))
     },
-    [onChangeSelected, selected.filter],
+    [onChangeSelected, selected],
   )
 
   const handleKeyDown = React.useCallback(
@@ -64,7 +67,19 @@ export function MultiSelect({
     [onChangeSelected, selected],
   )
 
-  const selectables = options.filter((option) => !selected.includes(option))
+  const selectables =
+    fetcher.data?.sources
+      .filter((source) => !selected.some((s) => s.value === source.id))
+      .map((option) => ({
+        value: option.id,
+        label: option.title,
+        publishedAt: option.publishedAt,
+      })) ?? []
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  React.useEffect(() => {
+    fetcher.load(`/${podcastSlug}/sources`)
+  }, [])
 
   return (
     <div className="w-full">
@@ -140,7 +155,7 @@ export function MultiSelect({
                         type="button"
                         variant="link"
                         size="icon"
-                        className="h-4 w-4 p-0"
+                        className="h-4 w-4 p-0 text-muted-foreground"
                         onClick={() => {
                           handleUnselect(option)
                         }}

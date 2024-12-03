@@ -7,7 +7,7 @@ import {
 } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import React, { useEffect } from 'react'
-import { data, Form } from 'react-router'
+import { Form } from 'react-router'
 import { z } from 'zod'
 import {
   Button,
@@ -27,10 +27,9 @@ import {
   Stack,
   Textarea,
 } from '~/components/ui'
-import { MultiSelect } from '~/routes/$podcast.episodes.add/multi-select'
+import { SourceSelector } from '~/routes/$podcast.sources/SourceSelector'
 import { responseSchema } from '../api.podcast-generate/route'
 import type { Route } from './+types/route'
-import { listRssEntries } from './queries.server'
 
 const schema = z.object({
   episodeSources: z.array(z.string()),
@@ -41,12 +40,8 @@ const schema = z.object({
   bgm: z.string().optional(),
 })
 
-export const loader = async ({ params }: Route.LoaderArgs) => {
-  const sources = await listRssEntries(params.podcast)
-  if (!sources) {
-    throw data(null, { status: 404 })
-  }
-  return { sources }
+export const loader = ({ params }: Route.LoaderArgs) => {
+  return {}
 }
 
 export const action = async ({ request }: Route.ActionArgs) => {
@@ -56,7 +51,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
 }
 
 export default function EpisodeNewPage({
-  loaderData: { sources },
+  params: { podcast: podcastSlug },
 }: Route.ComponentProps) {
   const { isLoading, object, stop, submit, error } = useObject({
     api: '/api/podcast-generate',
@@ -109,13 +104,9 @@ export default function EpisodeNewPage({
             <div>
               <Label>エピソード元エントリ</Label>
               <HStack className="items-start">
-                <MultiSelect
+                <SourceSelector
+                  podcastSlug={podcastSlug}
                   selected={selected}
-                  options={sources.map((source) => ({
-                    label: source.title,
-                    value: source.id,
-                    publishedAt: source.publishedAt,
-                  }))}
                   onChangeSelected={setSelected}
                 />
 
