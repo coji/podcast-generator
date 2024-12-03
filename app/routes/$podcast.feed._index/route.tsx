@@ -20,8 +20,8 @@ export const action = async ({ params }: Route.ActionArgs) => {
   return dataWithSuccess(
     { success: true },
     {
-      message: 'sync succeded',
-      description: `added: ${added.length}, updated: ${updated.length}`,
+      message: '元記事を最新に更新しました',
+      description: `${added.length}記事追加, ${updated.length}記事更新`,
     },
   )
 }
@@ -32,32 +32,25 @@ export default function PodcastManager({
   const fetcher = useFetcher<typeof action>()
 
   return (
-    <div>
-      <HStack className="sticky top-0 bg-slate-200 pb-2">
-        <h2 className="flex-1 text-xl font-semibold">Feed Entries</h2>
+    <Stack>
+      <HStack>
+        <h2 className="flex-1 text-xl font-semibold">元記事</h2>
         <fetcher.Form method="POST">
           <Button
             size="sm"
             variant="outline"
             isLoading={fetcher.state === 'submitting'}
           >
-            Sync
+            更新
           </Button>
         </fetcher.Form>
       </HStack>
 
-      <Stack>
-        {entries.map((entry) => (
-          <Link
-            key={entry.id}
-            to={entry.id}
-            preventScrollReset
-            className="group"
-          >
-            <RssEntry entry={entry} feedTitle={entry.RssFeed.title} />
-          </Link>
-        ))}
-      </Stack>
-    </div>
+      {entries.map((entry) => (
+        <Link key={entry.id} to={entry.id} preventScrollReset className="group">
+          <RssEntry entry={entry} feedTitle={entry.RssFeed.title} />
+        </Link>
+      ))}
+    </Stack>
   )
 }

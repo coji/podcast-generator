@@ -47,13 +47,13 @@ export default function PodcastLayout({
               to="episodes"
               className="rounded-md px-3 py-1 ring-offset-background aria-[current]:bg-card aria-[current]:shadow"
             >
-              Episodes
+              エピソード
             </NavLink>
             <NavLink
               to="feed"
               className="rounded-md px-3 py-1 ring-offset-background aria-[current]:bg-card aria-[current]:shadow"
             >
-              Sources
+              元記事
             </NavLink>
           </HStack>
         </HStack>
