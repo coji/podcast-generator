@@ -24,15 +24,15 @@ export default function PodcastLayout({
 
   return (
     <div className="grid min-h-dvh grid-cols-1 grid-rows-[auto,1fr]">
-      <header className="px-4 py-2">
-        <HStack>
-          <h1 className="flex-1 text-2xl font-bold">
+      <header className="px-2 py-1 md:px-4 md:py-2">
+        <HStack className="flex-wrap">
+          <h1 className="text-2xl font-bold">
             <Link to="/">Podcast Manager</Link>
           </h1>
 
           <div>
             <Select
-              defaultValue={podcast?.id}
+              value={podcast?.slug ?? ''}
               onValueChange={(value) => {
                 navigate(`/${value}/episodes`)
               }}
@@ -42,13 +42,15 @@ export default function PodcastLayout({
               </SelectTrigger>
               <SelectContent>
                 {allPodcasts.map((p) => (
-                  <SelectItem key={p.id} value={p.id}>
+                  <SelectItem key={p.slug} value={p.slug}>
                     {p.title}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
+
+          <div className="flex-1" />
 
           {podcast && (
             <HStack className="gap-2 rounded-md bg-slate-200 p-1 text-sm font-medium">
@@ -69,7 +71,7 @@ export default function PodcastLayout({
         </HStack>
       </header>
 
-      <main className="bg-slate-200 px-4 py-2">
+      <main className="bg-slate-200 px-2 py-1 md:px-4 md:py-2">
         <Outlet />
       </main>
     </div>
