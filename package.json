@@ -21,6 +21,7 @@
     "@conform-to/zod": "^1.2.2",
     "@date-fns/tz": "^1.2.0",
     "@date-fns/utc": "^2.1.0",
+    "@internationalized/date": "^3.6.0",
     "@prisma/client": "^6.0.0",
     "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-collapsible": "^1.1.1",

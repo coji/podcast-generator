@@ -6,7 +6,7 @@ import {
   useForm,
 } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { data, Form } from 'react-router'
 import { z } from 'zod'
 import {
@@ -46,7 +46,6 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
   if (!sources) {
     throw data(null, { status: 404 })
   }
-  console.log({ sources })
   return { sources }
 }
 
@@ -89,34 +88,42 @@ export default function EpisodeNewPage({
     }
   }, [object])
 
+  const [selected, setSelected] = React.useState<
+    { value: string; label: string; publishedAt: Date }[]
+  >([])
+
   return (
-    <Card className="flex-1">
+    <Card className="flex flex-1 flex-col">
       <CardHeader>
         <CardTitle>Add New Episode</CardTitle>
         <CardDescription />
       </CardHeader>
-      <CardContent>
-        <Form method="POST" {...getFormProps(form)}>
-          <Stack>
+      <CardContent className="flex flex-1 flex-col">
+        <Form
+          method="POST"
+          {...getFormProps(form)}
+          className="flex flex-1 flex-col"
+        >
+          <Stack className="flex-1">
             {/* episode sources */}
             <div>
               <Label>エピソード元エントリ</Label>
               <HStack className="items-start">
                 <MultiSelect
+                  selected={selected}
                   options={sources.map((source) => ({
                     label: source.title,
                     value: source.id,
+                    publishedAt: source.publishedAt,
                   }))}
+                  onChangeSelected={setSelected}
                 />
 
                 <Button
                   type="button"
                   onClick={() => {
                     submit({
-                      entryIds: [
-                        'ae7f86ca-f740-4fd3-80d9-54c032641443',
-                        'ca561ff4-612e-46d2-be12-b3458ddaaa68',
-                      ],
+                      entryIds: selected.map((option) => option.value),
                     })
                   }}
                   isLoading={isLoading}
@@ -159,9 +166,10 @@ export default function EpisodeNewPage({
             </div>
 
             {/* manuscript */}
-            <div>
+            <div className="flex flex-1 flex-col">
               <Label>原稿</Label>
               <Textarea
+                className="flex-1"
                 {...getTextareaProps(fields.manuscript)}
                 key={fields.manuscript.key}
                 disabled={isLoading}

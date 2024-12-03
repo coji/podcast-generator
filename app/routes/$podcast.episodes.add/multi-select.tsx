@@ -1,7 +1,8 @@
-import * as React from 'react'
-
 import { Command as CommandPrimitive } from 'cmdk'
+import { format } from 'date-fns'
+import { ja } from 'date-fns/locale'
 import { XIcon } from 'lucide-react'
+import * as React from 'react'
 import {
   Button,
   HStack,
@@ -17,15 +18,16 @@ import {
   CommandList,
 } from '~/components/ui/command'
 
-type Option = Record<'value' | 'label', string>
+type Option = { value: string; label: string; publishedAt: Date }
 
 export function MultiSelect({
-  defaultValues = [],
+  selected,
   options,
   placeholder,
   name,
+  onChangeSelected,
 }: {
-  defaultValues?: Option[]
+  selected: Option[]
   options: Option[]
   placeholder?: string
   name?: string
@@ -33,12 +35,14 @@ export function MultiSelect({
 }) {
   const inputRef = React.useRef<HTMLInputElement>(null)
   const [open, setOpen] = React.useState(false)
-  const [selected, setSelected] = React.useState<Option[]>(defaultValues)
   const [inputValue, setInputValue] = React.useState('')
 
-  const handleUnselect = React.useCallback((option: Option) => {
-    setSelected((prev) => prev.filter((s) => s.value !== option.value))
-  }, [])
+  const handleUnselect = React.useCallback(
+    (option: Option) => {
+      onChangeSelected?.(selected.filter((s) => s.value !== option.value))
+    },
+    [onChangeSelected, selected.filter],
+  )
 
   const handleKeyDown = React.useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -46,11 +50,9 @@ export function MultiSelect({
       if (input) {
         if (e.key === 'Delete' || e.key === 'Backspace') {
           if (input.value === '') {
-            setSelected((prev) => {
-              const newSelected = [...prev]
-              newSelected.pop()
-              return newSelected
-            })
+            const newSelected = [...selected]
+            newSelected.pop()
+            onChangeSelected?.(newSelected)
           }
         }
         // This is not a default behaviour of the <input /> field
@@ -59,7 +61,7 @@ export function MultiSelect({
         }
       }
     },
-    [],
+    [onChangeSelected, selected],
   )
 
   const selectables = options.filter((option) => !selected.includes(option))
@@ -98,10 +100,15 @@ export function MultiSelect({
                         }}
                         onSelect={(value) => {
                           setInputValue('')
-                          setSelected((prev) => [...prev, option])
+                          onChangeSelected?.([...selected, option])
                         }}
                         className={'cursor-pointer'}
                       >
+                        <span className="mr-2 text-xs font-medium text-muted-foreground">
+                          {format(option.publishedAt, 'yyyy-MM-dd(ccc)', {
+                            locale: ja,
+                          })}
+                        </span>
                         {option.label}
                       </CommandItem>
                     )
@@ -121,7 +128,14 @@ export function MultiSelect({
                 <TableRow key={option.value}>
                   <TableCell>
                     <HStack>
-                      <div className="flex-1">{option.label}</div>
+                      <div className="flex-1">
+                        <span className="mr-2 text-xs font-medium text-muted-foreground">
+                          {format(option.publishedAt, 'yyyy-MM-dd(ccc)', {
+                            locale: ja,
+                          })}
+                        </span>
+                        {option.label}
+                      </div>
                       <Button
                         type="button"
                         variant="link"

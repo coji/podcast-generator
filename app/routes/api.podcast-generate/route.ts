@@ -1,5 +1,8 @@
 import { openai } from '@ai-sdk/openai'
+import { TZDate } from '@date-fns/tz'
 import { streamObject } from 'ai'
+import { format } from 'date-fns'
+import { ja } from 'date-fns/locale'
 import { z } from 'zod'
 import { prisma } from '~/services/prisma.server'
 import type { Route } from './+types/route'
@@ -20,63 +23,56 @@ export const action = async ({ request }: Route.ActionArgs) => {
     throw new Error('Invalid request')
   }
 
-  const entries = await prisma.rssEntry.findMany({
+  const entry = await prisma.rssEntry.findFirstOrThrow({
     select: { title: true, content: true, publishedAt: true },
     where: { id: { in: data.entryIds } },
   })
 
+  const mcName = 'ちゃんもも'
+  const programName = 'アグレッシブちゃんももポッドキャスト'
+  const todayJST = new TZDate(entry.publishedAt).withTimeZone('Asia/Tokyo')
   const prompt = `
-# 指示
+## Instruction
+あなたはプロの放送作家です。与えられる情報をもとに、ラジオでMCが読み上げるカンペを作成します。
 
-記事やブログの内容を元に、以下のようなポッドキャストのタイトル、説明文、トーク原稿をします。
+ポッドキャストは楽しい雰囲気で、スピーカーは日本のFMラジオのような喋り方をします。
+ポッドキャストMCは1人で、名前は「${mcName}」です。
+${mcName}は気さくで陽気な人物です。口調は優しく丁寧で、フレンドリーです。
+番組名は「${programName}」です。
 
-1. 入力：変換したい記事やブログ記事を複数提供
+## 構成
 
-2. 変換ルール
-* 話し言葉で親しみやすく
-* 音声合成用にクリーンなテキスト
-* 冒頭は「はいはい！ちゃんももです！」で始める
-* 最後は「それでは、ちゃんももでした！またね」で締める
-* 引用符やカギカッコは残す（例：『タイトル』）
-* 話者名や発話記号（「」）は入れない
-* 笑い声や感情表現も音声合成で表現できるような文字にする
+1. 最初に挨拶し、今日の日付（月、日、曜日）を添えながら、今日のエピソードを紹介することを伝えます。
+2. 「今日紹介する内容」を紹介します。
+3. 最後に締めの挨拶で、今日伝えた内容を駆け足でおさらいし、次回会えるのを楽しみにしていること、詳しい内容はショーノートに書いてあること、番組の感想を募集していることを伝えます。
 
-3. 構成
-* 挨拶
-* 本日のテーマ提示
-* エピソード紹介
-* 学びや気づき
-* リスナーへの問いかけ
-* 締めの挨拶
+## 制約
 
-4. トーン
-* カジュアルで親しみやすい
-* 独り言のような自然な語り口
-* ラジオDJのような親近感
+- セリフ部分だけを出力します
+- 難しい漢字は読み手が間違えないように、ひらがなで書きます。
+- 読み上げ用の原稿なので、URLは含めないでください
+- 「紹介する内容」は、一つの記事につき500文字でまとめます。
+- 出力する文字数の上限は4000文字
+ 
+### 今日の日付
+${format(todayJST, 'yyyy-MM-dd(EEE)', { locale: ja })}
 
-# 入力
-
-${entries
-  .map(
-    (entry) => `## 記事: ${entry.title}
-- 公開日: ${entry.publishedAt}
-- 内容: ${entry.content}
-`,
-  )
-  .join('\n\n')}
+### 今日紹介する内容
+タイトル: ${entry.title}
+${entry.content}
 `
 
   const result = await streamObject({
     model: openai('gpt-4o-mini'),
     schema: responseSchema,
     prompt,
-    // onFinish: (event) => {
-    //   const priceInput = (event.usage.promptTokens * 0.00015) / 1000
-    //   const priceOutput = (event.usage.completionTokens * 0.0006) / 1000
-    //   const totalPrice = (priceInput + priceOutput) * 150
+    onFinish: (event) => {
+      const priceInput = (event.usage.promptTokens * 0.00015) / 1000
+      const priceOutput = (event.usage.completionTokens * 0.0006) / 1000
+      const totalPrice = (priceInput + priceOutput) * 150
 
-    //   console.log(event.object, totalPrice)
-    // },
+      console.log(event.object, totalPrice)
+    },
   })
   return result.toTextStreamResponse()
 }
