@@ -38,32 +38,10 @@ export function SourceSelector({
 }) {
   const [open, setOpen] = React.useState<boolean>(false)
   const fetcher = useFetcher<typeof loader>()
-  const inputRef = React.useRef<HTMLInputElement>(null)
-  const [inputValue, setInputValue] = React.useState('')
 
   const handleUnselect = React.useCallback(
     (option: Option) => {
       onChangeSelected?.([...selected].filter((s) => s.value !== option.value))
-    },
-    [onChangeSelected, selected],
-  )
-
-  const handleKeyDown = React.useCallback(
-    (e: React.KeyboardEvent<HTMLDivElement>) => {
-      const input = inputRef.current
-      if (input) {
-        if (e.key === 'Delete' || e.key === 'Backspace') {
-          if (input.value === '') {
-            const newSelected = [...selected]
-            newSelected.pop()
-            onChangeSelected?.(newSelected)
-          }
-        }
-        // This is not a default behaviour of the <input /> field
-        if (e.key === 'Escape') {
-          input.blur()
-        }
-      }
     },
     [onChangeSelected, selected],
   )
@@ -79,7 +57,7 @@ export function SourceSelector({
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   React.useEffect(() => {
-    fetcher.load(`/${podcastSlug}/sources`)
+    fetcher.load(`/${podcastSlug}/feed/selector`)
   }, [])
 
   return (
@@ -113,7 +91,6 @@ export function SourceSelector({
                           e.stopPropagation()
                         }}
                         onSelect={(value) => {
-                          setInputValue('')
                           onChangeSelected?.([...selected, option])
                         }}
                         className={'grid cursor-pointer grid-cols-[100px,1fr]'}

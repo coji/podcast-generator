@@ -20,7 +20,7 @@ export default function PodcastLayout({
   loaderData: { allPodcasts, podcast },
 }: Route.ComponentProps) {
   return (
-    <div className="grid h-dvh grid-cols-1 grid-rows-[auto,1fr]">
+    <div className="grid min-h-dvh grid-cols-1 grid-rows-[auto,1fr]">
       <header className="px-4 py-2">
         <HStack>
           <h1 className="flex-1 text-2xl font-bold">
@@ -59,7 +59,7 @@ export default function PodcastLayout({
         </HStack>
       </header>
 
-      <main className="grid grid-cols-1 overflow-hidden bg-slate-200 px-4 py-2">
+      <main className="bg-slate-200 px-4 py-2">
         <Outlet />
       </main>
     </div>

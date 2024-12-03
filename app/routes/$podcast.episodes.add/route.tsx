@@ -27,7 +27,7 @@ import {
   Stack,
   Textarea,
 } from '~/components/ui'
-import { SourceSelector } from '~/routes/$podcast.sources/SourceSelector'
+import { SourceSelector } from '~/routes/$podcast.feed.selector/SourceSelector'
 import { responseSchema } from '../api.podcast-generate/route'
 import type { Route } from './+types/route'
 
