@@ -98,22 +98,24 @@ export const action = async ({ request }: Route.ActionArgs) => {
   )
   const queryResultJson: AccentPhrases = await queryResult.json()
 
+  console.log(queryResultJson)
   // generate
   const synthesisResult = await fetch(
-    `http://localhost:10101/synthesis?speaker=${submission.value.style}`,
+    `http://localhost:10101/multi_synthesis?speaker=${submission.value.style}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(queryResultJson),
+      body: JSON.stringify([queryResultJson]),
     },
   )
   if (synthesisResult.status >= 400) {
+    console.log(await synthesisResult.json())
     throw new Error(synthesisResult.statusText)
   }
 
   const id = crypto.randomUUID()
   const wav = await synthesisResult.arrayBuffer()
-  await fs.writeFile(`./data/${id}.wav`, Buffer.from(wav))
+  await fs.writeFile(`./data/${id}.zip`, Buffer.from(wav))
 
   return { lastResult: submission.reply(), id }
 }

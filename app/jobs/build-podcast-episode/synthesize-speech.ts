@@ -39,9 +39,11 @@ export const synthesizeSpeech = async (
   podcastSlug: string,
   isTest: boolean, // Added isTest parameter
 ): Promise<string> => {
+  // Define background music file path (example path)
+  const baseDir = path.join('./data', userId, podcastSlug)
   const outputDir = isTest
-    ? path.join('./data', userId, podcastSlug, 'test')
-    : path.join('./data', userId, podcastSlug)
+    ? path.join(baseDir, 'test')
+    : path.join(baseDir, 'publish')
   await fs.mkdir(outputDir, { recursive: true })
 
   const outputFile = path.join(outputDir, generateFilename('speech', 'wav'))

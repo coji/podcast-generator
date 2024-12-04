@@ -8,7 +8,7 @@ import {
 import { parseWithZod } from '@conform-to/zod'
 import { WandSparklesIcon } from 'lucide-react'
 import React, { useEffect } from 'react'
-import { Form } from 'react-router'
+import { useFetcher } from 'react-router'
 import { z } from 'zod'
 import { zx } from 'zodix'
 import {
@@ -78,19 +78,33 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   return { lastResult: submission.reply(), audioFile } // Return the filename
 }
 
+// Helper function to format minutes
+const formatMinutes = (seconds: number): string =>
+  `${Math.floor(seconds / 60)}分`
+
+// Helper function to format seconds
+const formatSeconds = (seconds: number): string => `${seconds % 60}秒`
+
+// Refactored formatDuration function
+const formatDuration = (seconds: number): string =>
+  seconds < 60
+    ? formatSeconds(seconds)
+    : `${formatMinutes(seconds)}${formatSeconds(seconds)}`
+
 export default function EpisodeNewPage({
   params: { podcast: podcastSlug },
   loaderData: { bgms, initialSources },
   actionData,
 }: Route.ComponentProps) {
+  const fetcher = useFetcher<typeof action>()
+  const [form, fields] = useForm({
+    lastResult: fetcher.data?.lastResult,
+    onValidate: ({ formData }) => parseWithZod(formData, { schema }),
+  })
+
   const { isLoading, object, stop, submit, error } = useObject({
     api: '/api/podcast-generate',
     schema: responseSchema,
-  })
-
-  const [form, fields] = useForm({
-    lastResult: actionData?.lastResult,
-    onValidate: ({ formData }) => parseWithZod(formData, { schema }),
   })
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -120,19 +134,6 @@ export default function EpisodeNewPage({
       initialSources,
     )
 
-  // Helper function to format minutes
-  const formatMinutes = (seconds: number): string =>
-    `${Math.floor(seconds / 60)}分`
-
-  // Helper function to format seconds
-  const formatSeconds = (seconds: number): string => `${seconds % 60}秒`
-
-  // Refactored formatDuration function
-  const formatDuration = (seconds: number): string =>
-    seconds < 60
-      ? formatSeconds(seconds)
-      : `${formatMinutes(seconds)}${formatSeconds(seconds)}`
-
   return (
     <Card className="flex flex-1 flex-col">
       <CardHeader>
@@ -140,7 +141,7 @@ export default function EpisodeNewPage({
         <CardDescription />
       </CardHeader>
       <CardContent className="flex flex-1 flex-col">
-        <Form
+        <fetcher.Form
           method="POST"
           {...getFormProps(form)}
           className="flex flex-1 flex-col"
@@ -260,11 +261,15 @@ export default function EpisodeNewPage({
               </div>
             </div>
 
-            <Button disabled={isLoading} type="submit">
+            <Button
+              disabled={isLoading}
+              isLoading={fetcher.state === 'submitting'}
+              type="submit"
+            >
               新規作成
             </Button>
           </Stack>
-        </Form>
+        </fetcher.Form>
       </CardContent>
     </Card>
   )

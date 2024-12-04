@@ -1,4 +1,3 @@
-import path from 'node:path'
 import { mixBgm } from './mix'
 import { synthesizeSpeech } from './synthesize-speech'
 
@@ -26,13 +25,15 @@ export const generatePodcastAudio = async ({
     isTest,
   )
 
-  // Define background music file path (example path)
-  const bgmDir = path.join('./data', userId, podcastSlug, 'bgm')
-
-  const bgmFile = path.join(bgmDir, 'admel_theme_song.mp3')
+  const bgmFile = 'admel_theme_song.mp3'
 
   // Mix speech with background music
-  const mixedAudioFile = await mixBgm(speechFile, bgmFile)
+  const mixedAudioFile = await mixBgm({
+    inputAudioFile: speechFile,
+    bgmAudioFile: bgmFile,
+    userId,
+    podcastSlug,
+  })
 
   return mixedAudioFile
 }
