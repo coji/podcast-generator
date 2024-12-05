@@ -44,7 +44,6 @@ export const uploadFromFile = async (
   stream.push(fileBuffer)
   stream.push(null)
   const fileNameToUse = path.join(bucketPath, fileName)
-  console.log({ fileNameToUse })
   return await client.putObject(
     BUCKET_NAME,
     fileNameToUse,

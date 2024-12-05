@@ -2,8 +2,6 @@ import { uploadFromFile } from '~/services/r2.server'
 import { mixBgm } from './mix'
 import { synthesizeSpeech } from './synthesize-speech'
 
-// ...existing code...
-
 export const generatePodcastAudio = async ({
   speaker,
   text,
@@ -40,7 +38,6 @@ export const generatePodcastAudio = async ({
   })
 
   console.log('Mixed audio file:', mixedAudioFile)
-
   const fileName = `episode-${episodeId}.mp3`
   await uploadFromFile(podcastSlug, fileName, mixedAudioFile)
   const uploadFileUrl = new URL(
@@ -48,7 +45,7 @@ export const generatePodcastAudio = async ({
     process.env.R2_PUBLIC_BASE_URL,
   ).toString()
 
+  console.log('Uploaded file URL:', uploadFileUrl)
+
   return uploadFileUrl
 }
-
-// ...existing code...

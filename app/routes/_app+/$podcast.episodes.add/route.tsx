@@ -76,9 +76,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     isTest: true,
   })
 
-  console.log({ audioFile })
-
-  return { lastResult: submission.reply(), audioFile } // Return the filename
+  return { lastResult: submission.reply(), audioFile, id: crypto.randomUUID() } // Return the filename
 }
 
 // Helper function to format minutes
@@ -97,7 +95,6 @@ const formatDuration = (seconds: number): string =>
 export default function EpisodeNewPage({
   params: { podcast: podcastSlug },
   loaderData: { bgms, initialSources },
-  actionData,
 }: Route.ComponentProps) {
   const fetcher = useFetcher<typeof action>()
   const [form, fields] = useForm({
@@ -274,10 +271,12 @@ export default function EpisodeNewPage({
           </Stack>
         </fetcher.Form>
 
-        {actionData?.audioFile && (
-          <audio controls>
-            <source src={actionData.audioFile} type="audio/wav" />
-          </audio>
+        {fetcher.data?.audioFile && (
+          <div>
+            <audio controls autoPlay key={fetcher.data.id}>
+              <source src={fetcher.data.audioFile} type="audio/wav" />
+            </audio>
+          </div>
         )}
       </CardContent>
     </Card>
