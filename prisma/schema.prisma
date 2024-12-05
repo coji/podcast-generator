@@ -104,8 +104,6 @@ model Episode {
   manuscript        String?
   backgroundMusicId String?
   audioUrl          String?   @map("audio_url")
-  audioLength       Int?      @map("audio_length")
-  audioType         String?   @map("audio_type")
   audioDuration     Int?      @map("audio_duration")
   state             String    @default("draft") // draft, published, deleted
   publishedAt       DateTime? @map("published_at")

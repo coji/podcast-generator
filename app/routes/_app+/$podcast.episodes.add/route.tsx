@@ -33,6 +33,7 @@ import { generatePodcastAudio } from '~/jobs/build-podcast-episode' // Import th
 import { SourceSelector } from '~/routes/_app+/$podcast.feed.selector/SourceSelector'
 import { responseSchema } from '../../api.podcast-generate/route'
 import type { Route } from './+types/route'
+import { createEpisode, updateEpisodeAudioPublished } from './mutations.server'
 import { getPodcast, listBackgroundMusics, listSources } from './queries.server'
 
 const schema = z.object({
@@ -66,17 +67,39 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
   const podcast = await getPodcast(params.podcast)
 
+  const episode = await createEpisode(
+    podcast.slug,
+    {
+      title: submission.value.title,
+      description: submission.value.description,
+      manuscript: submission.value.manuscript,
+    },
+    submission.value.sources,
+  )
+
   // Call the new audio generation function
-  const audioFile = await generatePodcastAudio({
+  const { jobId, audioUrl, audioDuration } = await generatePodcastAudio({
     speaker: podcast.speaker, // Use the podcast speaker
     text: submission.value.manuscript,
     userId: podcast.userId,
     podcastSlug: params.podcast,
-    episodeId: 'test',
+    episodeId: episode.id,
     isTest: true,
   })
 
-  return { lastResult: submission.reply(), audioFile, id: crypto.randomUUID() } // Return the filename
+  // episode の audio 関連のフィールドを更新し、published にする
+  await updateEpisodeAudioPublished({
+    episodeId: episode.id,
+    audioDuration: audioDuration,
+    audioUrl,
+  })
+
+  return {
+    lastResult: submission.reply(),
+    audioUrl,
+    episode,
+    jobId,
+  } // Return the filename
 }
 
 // Helper function to format minutes
@@ -271,10 +294,10 @@ export default function EpisodeNewPage({
           </Stack>
         </fetcher.Form>
 
-        {fetcher.data?.audioFile && (
+        {fetcher.data?.audioUrl && (
           <div>
-            <audio controls autoPlay key={fetcher.data.id}>
-              <source src={fetcher.data.audioFile} type="audio/wav" />
+            <audio controls autoPlay key={fetcher.data.jobId}>
+              <source src={fetcher.data.audioUrl} type="audio/wav" />
             </audio>
           </div>
         )}

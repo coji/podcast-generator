@@ -16,7 +16,9 @@ export const generatePodcastAudio = async ({
   podcastSlug: string
   episodeId: string
   isTest: boolean
-}): Promise<string> => {
+}) => {
+  const jobId = crypto.randomUUID()
+
   // Synthesize speech
   console.log('Synthesizing speech...')
   const speechFile = await synthesizeSpeech(
@@ -30,22 +32,22 @@ export const generatePodcastAudio = async ({
   // Mix speech with background music
   console.log('Mixing speech with background music...')
   const bgmFile = 'admel_theme_song.mp3'
-  const mixedAudioFile = await mixBgm({
+  const { outputAudioFile, audioDuration } = await mixBgm({
     inputAudioFile: speechFile,
     bgmAudioFile: bgmFile,
     userId,
     podcastSlug,
   })
 
-  console.log('Mixed audio file:', mixedAudioFile)
+  console.log('Mixed audio file:', outputAudioFile)
   const fileName = `episode-${episodeId}.mp3`
-  await uploadFromFile(podcastSlug, fileName, mixedAudioFile)
-  const uploadFileUrl = new URL(
+  await uploadFromFile(podcastSlug, fileName, outputAudioFile)
+  const audioUrl = new URL(
     `/${podcastSlug}/${fileName}`,
     process.env.R2_PUBLIC_BASE_URL,
   ).toString()
 
-  console.log('Uploaded file URL:', uploadFileUrl)
+  console.log('Uploaded file URL:', audioUrl)
 
-  return uploadFileUrl
+  return { audioUrl, audioDuration, jobId }
 }
