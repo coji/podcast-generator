@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises'
 import { uploadFromFile } from '~/services/r2.server'
 import { mixBgm } from './mix'
+import { updateEpisodeAudioPublished } from './mutations.server'
 import { synthesizeSpeech } from './synthesize-speech'
 
 export const generatePodcastAudio = async ({
@@ -52,6 +53,13 @@ export const generatePodcastAudio = async ({
   ).toString()
 
   console.log('Uploaded file URL:', audioUrl)
+
+  // episode の audio 関連のフィールドを更新し、published にする
+  await updateEpisodeAudioPublished({
+    episodeId,
+    audioDuration: audioDuration,
+    audioUrl,
+  })
 
   return { audioUrl, audioDuration, jobId }
 }

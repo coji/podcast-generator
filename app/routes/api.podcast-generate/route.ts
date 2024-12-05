@@ -23,7 +23,8 @@ export const action = async ({ request }: Route.ActionArgs) => {
   const todayJST = new TZDate(entry.publishedAt).withTimeZone('Asia/Tokyo')
   const prompt = `
 ## Instruction
-あなたはプロの放送作家です。与えられる情報をもとに、ポッドキャストでホストが読み上げるカンペと、エピソードタイトル、概要説明文（要約）を作成します。
+あなたはプロの放送作家です。与えられる情報をもとに、ポッドキャストでホストが読み上げるカンペと、
+発行日、エピソードタイトル、概要説明文（要約）を作成します。
 
 ポッドキャストは楽しい雰囲気で、ホストは日本のFMラジオのような喋り方をします。
 ポッドキャストホストは1人で、名前は「${mcName}」です。

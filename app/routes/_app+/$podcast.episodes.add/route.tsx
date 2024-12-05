@@ -33,7 +33,7 @@ import { generatePodcastAudio } from '~/jobs/build-podcast-episode'
 import { SourceSelector } from '~/routes/_app+/$podcast.feed.selector/SourceSelector'
 import { responseSchema } from '~/routes/api.podcast-generate/schema'
 import type { Route } from './+types/route'
-import { createEpisode, updateEpisodeAudioPublished } from './mutations.server'
+import { createEpisode } from './mutations.server'
 import { getPodcast, listBackgroundMusics, listSources } from './queries.server'
 
 const schema = z.object({
@@ -41,6 +41,7 @@ const schema = z.object({
   title: z.string({ required_error: '必須' }),
   description: z.string({ required_error: '必須' }),
   manuscript: z.string({ required_error: '必須' }),
+  publishedAt: z.date(),
   bgm: z.string().optional(),
 })
 
@@ -70,6 +71,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   const episode = await createEpisode(
     podcast.slug,
     {
+      publishedAt: submission.value.publishedAt,
       title: submission.value.title,
       description: submission.value.description,
       manuscript: submission.value.manuscript,
@@ -85,13 +87,6 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     podcastSlug: params.podcast,
     episodeId: episode.id,
     isTest: true,
-  })
-
-  // episode の audio 関連のフィールドを更新し、published にする
-  await updateEpisodeAudioPublished({
-    episodeId: episode.id,
-    audioDuration: audioDuration,
-    audioUrl,
   })
 
   return {
@@ -132,6 +127,13 @@ export default function EpisodeNewPage({
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
+    if (object?.publishedAt !== fields.publishedAt.value) {
+      form.update({
+        name: fields.publishedAt.name,
+        value: object?.publishedAt ?? '',
+      })
+    }
+
     if (object?.title !== fields.title.value) {
       form.update({
         name: fields.title.name,
@@ -219,6 +221,20 @@ export default function EpisodeNewPage({
               </HStack>
               <div id={fields.sources.errorId} className="text-destructive">
                 {fields.sources.errors}
+              </div>
+            </div>
+
+            {/* publishedAt */}
+            <div>
+              <Label htmlFor={fields.publishedAt.id}>公開日時</Label>
+              <Input
+                {...getInputProps(fields.publishedAt, { type: 'text' })}
+                readOnly
+                key={fields.publishedAt.key}
+                disabled={isLoading}
+              />
+              <div id={fields.publishedAt.errorId} className="text-destructive">
+                {fields.publishedAt.errors}
               </div>
             </div>
 

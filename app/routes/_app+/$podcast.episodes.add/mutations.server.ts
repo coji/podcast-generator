@@ -1,4 +1,4 @@
-import type { Episode, Podcast, Prisma, RssEntry } from '@prisma/client'
+import type { Podcast, Prisma, RssEntry } from '@prisma/client'
 import { prisma } from '~/services/prisma.server'
 
 export const createEpisode = async (
@@ -26,24 +26,4 @@ export const createEpisode = async (
   }
 
   return episode
-}
-
-export const updateEpisodeAudioPublished = async ({
-  episodeId,
-  audioDuration,
-  audioUrl,
-}: {
-  episodeId: Episode['id']
-  audioDuration: Episode['audioDuration']
-  audioUrl: Episode['audioUrl']
-}) => {
-  await prisma.episode.update({
-    where: { id: episodeId },
-    data: {
-      audioDuration,
-      audioUrl,
-      publishedAt: new Date(),
-      state: 'published',
-    },
-  })
 }

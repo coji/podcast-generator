@@ -5,6 +5,7 @@ export const requestSchema = z.object({
 })
 
 export const responseSchema = z.object({
+  publishedAt: z.date(),
   title: z.string(),
   description: z.string(),
   manuscript: z.string(),
