@@ -149,10 +149,10 @@ export default function EpisodeNewPage({
           <Stack className="flex-1">
             {/* episode sources */}
             <div>
-              <Label htmlFor="source-selector">元記事</Label>
+              <Label htmlFor={fields.sources.id}>元記事</Label>
               <HStack className="items-start">
                 <SourceSelector
-                  id="source-selector"
+                  id={fields.sources.id}
                   podcastSlug={podcastSlug}
                   selected={selected}
                   onChangeSelected={setSelected}

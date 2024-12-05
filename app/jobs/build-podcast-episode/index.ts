@@ -17,6 +17,7 @@ export const generatePodcastAudio = async ({
   isTest: boolean
 }): Promise<string> => {
   // Synthesize speech
+  console.log('Synthesizing speech...')
   const speechFile = await synthesizeSpeech(
     speaker,
     text,
@@ -25,15 +26,17 @@ export const generatePodcastAudio = async ({
     isTest,
   )
 
-  const bgmFile = 'admel_theme_song.mp3'
-
   // Mix speech with background music
+  console.log('Mixing speech with background music...')
+  const bgmFile = 'admel_theme_song.mp3'
   const mixedAudioFile = await mixBgm({
     inputAudioFile: speechFile,
     bgmAudioFile: bgmFile,
     userId,
     podcastSlug,
   })
+
+  console.log('Mixed audio file:', mixedAudioFile)
 
   return mixedAudioFile
 }

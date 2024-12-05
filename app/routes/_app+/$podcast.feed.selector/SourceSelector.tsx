@@ -61,9 +61,8 @@ export function SourceSelector({
   return (
     <Stack className="w-full">
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
+        <PopoverTrigger id={id} asChild>
           <Button
-            id={id}
             type="button"
             variant="outline"
             className="text-sm"

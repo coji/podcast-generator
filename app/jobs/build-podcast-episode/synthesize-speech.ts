@@ -1,5 +1,7 @@
+import crypto from 'node:crypto' // Added import for crypto
 import fs from 'node:fs/promises'
 import path from 'node:path'
+import { $ } from 'zx'
 
 interface Moras {
   text: string
@@ -45,25 +47,41 @@ export const synthesizeSpeech = async (
     ? path.join(baseDir, 'test')
     : path.join(baseDir, 'publish')
   await fs.mkdir(outputDir, { recursive: true })
+  const tmpDir = path.join(baseDir, 'tmp')
+  await fs.mkdir(tmpDir, { recursive: true })
 
+  const outputZipFile = path.join(tmpDir, generateFilename('speech', 'zip'))
   const outputFile = path.join(outputDir, generateFilename('speech', 'wav'))
+  const accentPhrases: AccentPhrases[] = []
 
-  // Fetch audio query
-  const queryParams = new URLSearchParams({ speaker, text })
-  const queryResponse = await fetch(
-    `http://localhost:10101/audio_query?${queryParams.toString()}`,
-    {
-      method: 'POST',
-    },
-  )
-  if (!queryResponse.ok) {
-    throw new Error(queryResponse.statusText)
+  // テキストを行ごとに分割
+  const lines = text.split('\n').filter((line) => line.trim() !== '')
+  for (const line of lines) {
+    console.log({ line })
+    // Fetch audio query
+    const queryParams = new URLSearchParams({ speaker, text: line })
+    const queryResponse = await fetch(
+      `http://localhost:10101/audio_query?${queryParams.toString()}`,
+      {
+        method: 'POST',
+      },
+    )
+    if (!queryResponse.ok) {
+      throw new Error(queryResponse.statusText)
+    }
+
+    const phrase: AccentPhrases = await queryResponse.json()
+    accentPhrases.push(phrase)
   }
-  const accentPhrases: AccentPhrases = await queryResponse.json()
+
+  await fs.writeFile(
+    path.join(baseDir, 'accentPhrases.json'),
+    JSON.stringify(accentPhrases),
+  )
 
   // Synthesize speech
   const synthesisResponse = await fetch(
-    `http://localhost:10101/synthesis?speaker=${speaker}`,
+    `http://localhost:10101/multi_synthesis?speaker=${speaker}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -77,7 +95,12 @@ export const synthesizeSpeech = async (
 
   // Save audio file
   const id = crypto.randomUUID()
-  await fs.writeFile(outputFile, Buffer.from(audioBuffer))
+  await fs.writeFile(outputZipFile, Buffer.from(audioBuffer))
+
+  // unzip the file
+  $.nothrow = true
+  await $`unzip -o ${outputZipFile} -d ${tmpDir}`
+  await $`mv ${tmpDir}/001.wav ${outputFile}`
 
   return outputFile
 }
