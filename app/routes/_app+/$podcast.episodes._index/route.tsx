@@ -1,3 +1,5 @@
+import { format } from 'date-fns/format'
+import { ja } from 'date-fns/locale'
 import { Link } from 'react-router'
 import {
   Badge,
@@ -7,6 +9,9 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
   HStack,
   Stack,
 } from '~/components/ui'
@@ -40,7 +45,7 @@ export default function EpisodesLayout({
                 <CardTitle>{episode.title}</CardTitle>
                 <CardDescription>{episode.description}</CardDescription>
               </div>
-              <div>
+              <div className="text-center">
                 <Badge
                   className="capitalize"
                   variant={
@@ -49,6 +54,10 @@ export default function EpisodesLayout({
                 >
                   {episode.state}
                 </Badge>
+                <div className="text-xs">
+                  {episode.publishedAt &&
+                    format(episode.publishedAt, 'yyyy-MM-dd', { locale: ja })}
+                </div>
               </div>
             </HStack>
           </CardHeader>
@@ -60,6 +69,32 @@ export default function EpisodesLayout({
                 className="mx-auto text-center"
               />
             )}
+
+            <Collapsible>
+              <CollapsibleTrigger>
+                <Button variant="link" size="sm">
+                  ショーノート
+                </Button>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <Stack>
+                  {episode.EpisodeSources.map((source) => {
+                    const entry = source.RssEntry
+                    return (
+                      <a
+                        key={entry.id}
+                        href={entry.link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="ml-8 mr-auto text-sm text-blue-500 hover:underline"
+                      >
+                        <h3>{entry.title}</h3>
+                      </a>
+                    )
+                  })}
+                </Stack>
+              </CollapsibleContent>
+            </Collapsible>
           </CardContent>
         </Card>
       ))}
