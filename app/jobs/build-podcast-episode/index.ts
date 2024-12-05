@@ -1,3 +1,4 @@
+import fs from 'node:fs/promises'
 import { uploadFromFile } from '~/services/r2.server'
 import { mixBgm } from './mix'
 import { synthesizeSpeech } from './synthesize-speech'
@@ -18,6 +19,9 @@ export const generatePodcastAudio = async ({
   isTest: boolean
 }) => {
   const jobId = crypto.randomUUID()
+
+  const tmpdir = './data/tmp'
+  await fs.mkdir(tmpdir, { recursive: true })
 
   // Synthesize speech
   console.log('Synthesizing speech...')

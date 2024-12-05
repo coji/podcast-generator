@@ -29,9 +29,9 @@ import {
   Stack,
   Textarea,
 } from '~/components/ui'
-import { generatePodcastAudio } from '~/jobs/build-podcast-episode' // Import the new function
+import { generatePodcastAudio } from '~/jobs/build-podcast-episode'
 import { SourceSelector } from '~/routes/_app+/$podcast.feed.selector/SourceSelector'
-import { responseSchema } from '../../api.podcast-generate/route'
+import { responseSchema } from '~/routes/api.podcast-generate/schema'
 import type { Route } from './+types/route'
 import { createEpisode, updateEpisodeAudioPublished } from './mutations.server'
 import { getPodcast, listBackgroundMusics, listSources } from './queries.server'

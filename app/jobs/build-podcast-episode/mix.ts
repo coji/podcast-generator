@@ -2,9 +2,6 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { $ } from 'zx'
 
-const tmpdir = './data/tmp'
-await fs.mkdir(tmpdir, { recursive: true })
-
 export const mixBgm = async ({
   inputAudioFile,
   bgmAudioFile,

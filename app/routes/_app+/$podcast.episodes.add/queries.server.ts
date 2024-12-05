@@ -12,7 +12,7 @@ export const listSources = async (
   })
 }
 
-export const listBackgroundMusics = async (slug: string) => {
+export const listBackgroundMusics = async (slug: Podcast['slug']) => {
   return await prisma.backgroundMusic.findMany({
     where: {
       Podcast: { slug },

@@ -3,19 +3,9 @@ import { TZDate } from '@date-fns/tz'
 import { streamObject } from 'ai'
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
-import { z } from 'zod'
 import { prisma } from '~/services/prisma.server'
 import type { Route } from './+types/route'
-
-export const requestSchema = z.object({
-  entryIds: z.array(z.string()),
-})
-
-export const responseSchema = z.object({
-  title: z.string(),
-  description: z.string(),
-  manuscript: z.string(),
-})
+import { requestSchema, responseSchema } from './schema'
 
 export const action = async ({ request }: Route.ActionArgs) => {
   const { data, error } = requestSchema.safeParse(await request.json())
