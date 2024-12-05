@@ -1,5 +1,6 @@
 import { format } from 'date-fns/format'
 import { ja } from 'date-fns/locale'
+import { ChevronRightIcon } from 'lucide-react'
 import { Link } from 'react-router'
 import {
   Badge,
@@ -71,9 +72,13 @@ export default function EpisodesLayout({
             )}
 
             <Collapsible>
-              <CollapsibleTrigger>
+              <CollapsibleTrigger asChild className="group">
                 <Button variant="link" size="sm">
                   ショーノート
+                  <ChevronRightIcon
+                    size="16"
+                    className="transition-transform duration-200 group-data-[state=open]:rotate-90"
+                  />
                 </Button>
               </CollapsibleTrigger>
               <CollapsibleContent>
