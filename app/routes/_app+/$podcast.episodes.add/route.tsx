@@ -72,6 +72,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     text: submission.value.manuscript,
     userId: podcast.userId,
     podcastSlug: params.podcast,
+    episodeId: 'test',
     isTest: true,
   })
 

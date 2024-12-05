@@ -1,3 +1,4 @@
+import { uploadFromFile } from '~/services/r2.server'
 import { mixBgm } from './mix'
 import { synthesizeSpeech } from './synthesize-speech'
 
@@ -8,12 +9,14 @@ export const generatePodcastAudio = async ({
   text,
   userId,
   podcastSlug,
+  episodeId,
   isTest,
 }: {
   speaker: string
   text: string
   userId: string
   podcastSlug: string
+  episodeId: string
   isTest: boolean
 }): Promise<string> => {
   // Synthesize speech
@@ -38,7 +41,14 @@ export const generatePodcastAudio = async ({
 
   console.log('Mixed audio file:', mixedAudioFile)
 
-  return mixedAudioFile
+  const fileName = `episode-${episodeId}.mp3`
+  await uploadFromFile(podcastSlug, fileName, mixedAudioFile)
+  const uploadFileUrl = new URL(
+    `/${podcastSlug}/${fileName}`,
+    process.env.R2_PUBLIC_BASE_URL,
+  ).toString()
+
+  return uploadFileUrl
 }
 
 // ...existing code...
