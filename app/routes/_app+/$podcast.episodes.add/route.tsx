@@ -75,6 +75,8 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     isTest: true,
   })
 
+  console.log({ audioFile })
+
   return { lastResult: submission.reply(), audioFile } // Return the filename
 }
 
@@ -262,7 +264,7 @@ export default function EpisodeNewPage({
             </div>
 
             <Button
-              disabled={isLoading}
+              disabled={isLoading || fetcher.state === 'submitting'}
               isLoading={fetcher.state === 'submitting'}
               type="submit"
             >
@@ -270,6 +272,12 @@ export default function EpisodeNewPage({
             </Button>
           </Stack>
         </fetcher.Form>
+
+        {actionData?.audioFile && (
+          <audio controls>
+            <source src={actionData.audioFile} type="audio/wav" />
+          </audio>
+        )}
       </CardContent>
     </Card>
   )

@@ -1,4 +1,3 @@
-import crypto from 'node:crypto' // Added import for crypto
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { $ } from 'zx'
@@ -43,21 +42,18 @@ export const synthesizeSpeech = async (
 ): Promise<string> => {
   // Define background music file path (example path)
   const baseDir = path.join('./data', userId, podcastSlug)
-  const outputDir = isTest
-    ? path.join(baseDir, 'test')
-    : path.join(baseDir, 'publish')
+  const outputDir = path.join(baseDir)
   await fs.mkdir(outputDir, { recursive: true })
   const tmpDir = path.join(baseDir, 'tmp')
   await fs.mkdir(tmpDir, { recursive: true })
 
   const outputZipFile = path.join(tmpDir, generateFilename('speech', 'zip'))
-  const outputFile = path.join(outputDir, generateFilename('speech', 'wav'))
+  const outputFile = path.join(tmpDir, generateFilename('speech', 'wav'))
   const accentPhrases: AccentPhrases[] = []
 
   // テキストを行ごとに分割
   const lines = text.split('\n').filter((line) => line.trim() !== '')
   for (const line of lines) {
-    console.log({ line })
     // Fetch audio query
     const queryParams = new URLSearchParams({ speaker, text: line })
     const queryResponse = await fetch(
@@ -94,13 +90,24 @@ export const synthesizeSpeech = async (
   const audioBuffer = await synthesisResponse.arrayBuffer()
 
   // Save audio file
-  const id = crypto.randomUUID()
   await fs.writeFile(outputZipFile, Buffer.from(audioBuffer))
 
   // unzip the file
   $.nothrow = true
   await $`unzip -o ${outputZipFile} -d ${tmpDir}`
-  await $`mv ${tmpDir}/001.wav ${outputFile}`
+
+  const wavFiles = accentPhrases.map(
+    (_, index) => `${String(index + 1).padStart(3, '0')}.wav`,
+  )
+  const fileListPath = path.join(tmpDir, 'filelist.txt')
+  const fileListContent = wavFiles.map((file) => `file '${file}'`).join('\n')
+  await fs.writeFile(fileListPath, fileListContent)
+
+  console.log('Concatenating audio files...')
+  await $`ffmpeg -hide_banner -f concat -safe 0 -i ${fileListPath} -c copy ${outputFile}`
+
+  // Optionally, clean up temporary directory
+  // await fs.rm(tmpDir, { recursive: true, force: true })
 
   return outputFile
 }
