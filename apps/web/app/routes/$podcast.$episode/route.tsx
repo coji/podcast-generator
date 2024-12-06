@@ -120,7 +120,7 @@ export default function PodcastIndex({
       </Card>
 
       <div className="text-center">
-        <Button type="button" variant="link" asChild>
+        <Button type="button" variant="ghost" size="sm" asChild>
           <Link to=".." relative="path" viewTransition>
             トップに戻る
           </Link>
