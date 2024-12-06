@@ -3,7 +3,6 @@ import { ja } from 'date-fns/locale'
 import { ChevronRightIcon } from 'lucide-react'
 import { data, Link } from 'react-router'
 import {
-  Badge,
   Button,
   Card,
   CardContent,
@@ -76,16 +75,6 @@ export default function PodcastIndex({
                         })}
                     </CardDescription>
                     <CardTitle>{episode.title}</CardTitle>
-                  </div>
-                  <div className="text-right">
-                    <Badge
-                      className="capitalize"
-                      variant={
-                        episode.state === 'published' ? 'outline' : 'secondary'
-                      }
-                    >
-                      {episode.state}
-                    </Badge>
                   </div>
                 </HStack>
               </CardHeader>
