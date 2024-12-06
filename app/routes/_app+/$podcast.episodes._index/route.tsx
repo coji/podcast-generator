@@ -55,7 +55,7 @@ export default function EpisodesLayout({
                 <Badge
                   className="capitalize"
                   variant={
-                    episode.state === 'published' ? 'default' : 'outline'
+                    episode.state === 'published' ? 'outline' : 'secondary'
                   }
                 >
                   {episode.state}
