@@ -14,6 +14,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
   HStack,
+  Separator,
   Stack,
 } from '~/components/ui'
 import type { Route } from './+types/route'
@@ -41,7 +42,11 @@ export default function EpisodesLayout({
       {episodes.map((episode) => (
         <Card key={episode.id} className="mx-auto max-w-lg">
           <CardHeader>
-            <HStack>
+            <HStack className="gap-4">
+              <div className="text-xl font-medium">
+                # {episode.episodeNumber}
+              </div>
+              <Separator className="h-8" orientation="vertical" />
               <div className="flex-1">
                 <CardDescription className="text-xs">
                   {episode.publishedAt &&
