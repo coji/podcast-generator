@@ -16,7 +16,9 @@ export default function PodcastLayout({
   loaderData: { podcast },
 }: Route.ComponentProps) {
   const location = useLocation()
-  const isTopLevel = location.pathname === `/${podcast.slug}`
+  const isTopLevel =
+    location.pathname === `/${podcast.slug}` ||
+    location.pathname === `/${podcast.slug}/`
 
   return (
     <Stack className="mx-auto max-w-lg px-2 py-2 md:px-4">
