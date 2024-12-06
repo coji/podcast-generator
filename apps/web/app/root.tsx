@@ -7,6 +7,7 @@ import {
   ScrollRestoration,
 } from 'react-router'
 
+import { ThemeProvider } from 'next-themes'
 import type { Route } from './+types/root'
 import stylesheet from './app.css?url'
 
@@ -24,7 +25,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+
         <ScrollRestoration />
         <Scripts />
       </body>

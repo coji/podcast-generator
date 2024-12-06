@@ -20,14 +20,16 @@ export default function PodcastLayout({
 
   return (
     <Stack className="mx-auto max-w-lg px-2 py-2 md:px-4">
-      <header
-        className={cn('text-center', isTopLevel ? 'py-32' : 'py-8')}
-        style={{
-          viewTransitionName: 'header',
-        }}
-      >
+      <header className={cn('text-center', isTopLevel ? 'py-32' : 'py-8')}>
         <Link to={`/${podcast.slug}`} viewTransition>
-          <h2 className="text-2xl font-semibold">{podcast.title}</h2>
+          <h2
+            className="text-2xl font-semibold"
+            style={{
+              viewTransitionName: 'title',
+            }}
+          >
+            {podcast.title}
+          </h2>
         </Link>
       </header>
 

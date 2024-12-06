@@ -336,6 +336,9 @@ importers:
       tailwind-merge:
         specifier: 2.5.5
         version: 2.5.5
+      tailwindcss-animate:
+        specifier: 1.0.7
+        version: 1.0.7(tailwindcss@3.4.15)
       zod:
         specifier: 3.23.8
         version: 3.23.8
@@ -10321,6 +10324,10 @@ snapshots:
     optional: true
 
   tailwind-merge@2.5.5: {}
+
+  tailwindcss-animate@1.0.7(tailwindcss@3.4.15):
+    dependencies:
+      tailwindcss: 3.4.15
 
   tailwindcss-animate@1.0.7(tailwindcss@3.4.16):
     dependencies:
