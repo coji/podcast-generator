@@ -25,7 +25,7 @@ export default function PodcastLayout({
       <header className={cn('text-center', isTopLevel ? 'py-32' : 'py-8')}>
         <Link to={`/${podcast.slug}`} viewTransition>
           <h2
-            className="text-2xl font-semibold"
+            className="text-2xl font-semibold hover:underline"
             style={{
               viewTransitionName: 'title',
             }}
