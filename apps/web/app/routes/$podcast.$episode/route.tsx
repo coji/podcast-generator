@@ -123,9 +123,13 @@ export default function PodcastIndex({
           </CardContent>
         </Card>
 
-        <Link to=".." relative="path">
-          戻る
-        </Link>
+        <div className="text-center">
+          <Button type="button" variant="link" asChild>
+            <Link to=".." relative="path">
+              トップに戻る
+            </Link>
+          </Button>
+        </div>
       </Stack>
     </Stack>
   )
