@@ -59,8 +59,12 @@ export default function PodcastIndex({
 
       <Stack className="gap-8">
         {episodes.map((episode) => (
-          <Link to={`${episode.id}`} key={episode.id}>
-            <Card key={episode.id} className="mx-auto max-w-lg">
+          <Link
+            to={`${episode.id}`}
+            key={episode.id}
+            className="mx-auto max-w-lg"
+          >
+            <Card key={episode.id}>
               <CardHeader>
                 <HStack className="gap-4">
                   <div className="text-xl font-medium">
