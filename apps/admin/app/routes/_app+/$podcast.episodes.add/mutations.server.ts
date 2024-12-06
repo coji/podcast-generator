@@ -13,6 +13,23 @@ export const createEpisode = async (
   })
   const nextEpisodeNumber = latestEpisode ? latestEpisode.episodeNumber + 1 : 1
 
+  //　既存のエピソードの中に、今回の sourceEntryIds と完全に重複するものがあるかどうかをチェック
+  const existingEpisode = await prisma.episode.findFirst({
+    where: {
+      Podcast: { slug: podcastSlug },
+      EpisodeSources: { every: { rssEntryId: { in: sourceEntryIds } } },
+    },
+  })
+
+  // すでに存在する場合は udpate
+  if (existingEpisode) {
+    const episode = await prisma.episode.update({
+      where: { id: existingEpisode.id },
+      data,
+    })
+    return episode
+  }
+
   // Create the episode
   const episode = await prisma.episode.create({
     data: {

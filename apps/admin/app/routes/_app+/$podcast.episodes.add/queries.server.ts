@@ -25,3 +25,16 @@ export const getPodcast = async (slug: string) => {
     where: { slug },
   })
 }
+
+//　既存のエピソードの中に、今回の sourceEntryIds と完全に重複するものを探す
+export const findExistingEpisode = async (
+  podcastSlug: Podcast['slug'],
+  sourceEntryIds: RssEntry['id'][],
+) => {
+  return await prisma.episode.findFirst({
+    where: {
+      Podcast: { slug: podcastSlug },
+      EpisodeSources: { every: { rssEntryId: { in: sourceEntryIds } } },
+    },
+  })
+}

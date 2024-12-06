@@ -34,7 +34,12 @@ import { SourceSelector } from '~/routes/_app+/$podcast.feed.selector/SourceSele
 import { responseSchema } from '~/routes/api.podcast-generate/schema'
 import type { Route } from './+types/route'
 import { createEpisode } from './mutations.server'
-import { getPodcast, listBackgroundMusics, listSources } from './queries.server'
+import {
+  findExistingEpisode,
+  getPodcast,
+  listBackgroundMusics,
+  listSources,
+} from './queries.server'
 
 const schema = z.object({
   sources: z.array(z.string()).min(1, { message: '元記事を選択してください' }),
@@ -53,11 +58,13 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
       .optional()
       .default([]),
   })
+
+  const episode = await findExistingEpisode(params.podcast, source)
   const bgms = await listBackgroundMusics(params.podcast)
 
   const initialSources =
     source.length > 0 ? await listSources(params.podcast, source) : []
-  return { bgms, initialSources }
+  return { episode, bgms, initialSources }
 }
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
@@ -86,12 +93,13 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     userId: podcast.userId,
     podcastSlug: params.podcast,
     episodeId: episode.id,
-    isTest: true,
+    isTest: false,
   })
 
   return {
     lastResult: submission.reply(),
     audioUrl,
+    audioDuration,
     episode,
     jobId,
   } // Return the filename
@@ -112,11 +120,17 @@ const formatDuration = (seconds: number): string =>
 
 export default function EpisodeNewPage({
   params: { podcast: podcastSlug },
-  loaderData: { bgms, initialSources },
+  loaderData: { episode, bgms, initialSources },
 }: Route.ComponentProps) {
   const fetcher = useFetcher<typeof action>()
   const [form, fields] = useForm({
     lastResult: fetcher.data?.lastResult,
+    defaultValue: {
+      title: episode?.title,
+      description: episode?.description,
+      manuscript: episode?.manuscript,
+      publishedAt: episode?.publishedAt,
+    },
     onValidate: ({ formData }) => parseWithZod(formData, { schema }),
   })
 
@@ -127,6 +141,10 @@ export default function EpisodeNewPage({
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
+    if (object === undefined) {
+      return
+    }
+
     if (object?.publishedAt !== fields.publishedAt.value) {
       form.update({
         name: fields.publishedAt.name,
