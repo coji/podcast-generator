@@ -57,9 +57,9 @@ export default function PodcastIndex({
 }: Route.ComponentProps) {
   return (
     <Stack>
-      <h2 className="mx-auto max-w-lg py-32 text-2xl font-semibold">
-        {podcast.title}
-      </h2>
+      <Link to={`/${podcast.slug}`} className="mx-auto max-w-lg py-32">
+        <h2 className="text-2xl font-semibold">{podcast.title}</h2>
+      </Link>
 
       <Stack className="mx-auto max-w-lg gap-8">
         <Card key={episode.id}>

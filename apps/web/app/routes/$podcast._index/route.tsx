@@ -53,9 +53,9 @@ export default function PodcastIndex({
 }: Route.ComponentProps) {
   return (
     <Stack>
-      <h2 className="mx-auto max-w-lg py-32 text-2xl font-semibold">
-        {podcast.title}
-      </h2>
+      <Link to={`/${podcast.slug}`} className="mx-auto max-w-lg py-32">
+        <h2 className="text-2xl font-semibold">{podcast.title}</h2>
+      </Link>
 
       <Stack className="gap-8">
         {episodes.map((episode) => (
@@ -95,12 +95,15 @@ export default function PodcastIndex({
                   )}
 
                   <Collapsible>
-                    <CollapsibleTrigger
-                      asChild
-                      className="group"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Button variant="link" size="sm">
+                    <CollapsibleTrigger asChild className="group">
+                      <Button
+                        variant="link"
+                        size="sm"
+                        onClick={(e) => {
+                          console.log('hogehoge')
+                          e.stopPropagation()
+                        }}
+                      >
                         ショーノート
                         <ChevronRightIcon
                           size="16"
