@@ -29,7 +29,7 @@ export default function EpisodesLayout({
 }: Route.ComponentProps) {
   return (
     <Stack>
-      <HStack className="sticky top-0 bg-slate-200 pb-2">
+      <HStack className="bg-slate-200 pb-2">
         <h2 className="flex-1 text-xl font-semibold">エピソード</h2>
         <div>
           <Button type="button" size="sm" variant="link" asChild>
@@ -39,14 +39,19 @@ export default function EpisodesLayout({
       </HStack>
 
       {episodes.map((episode) => (
-        <Card key={episode.id}>
+        <Card key={episode.id} className="mx-auto max-w-lg">
           <CardHeader>
-            <HStack className="items-start">
+            <HStack>
               <div className="flex-1">
+                <CardDescription className="text-xs">
+                  {episode.publishedAt &&
+                    format(episode.publishedAt, 'yyyy年MM月dd日(ccc)', {
+                      locale: ja,
+                    })}
+                </CardDescription>
                 <CardTitle>{episode.title}</CardTitle>
-                <CardDescription>{episode.description}</CardDescription>
               </div>
-              <div className="text-center">
+              <div className="text-right">
                 <Badge
                   className="capitalize"
                   variant={
@@ -55,51 +60,49 @@ export default function EpisodesLayout({
                 >
                   {episode.state}
                 </Badge>
-                <div className="text-xs">
-                  {episode.publishedAt &&
-                    format(episode.publishedAt, 'yyyy-MM-dd', { locale: ja })}
-                </div>
               </div>
             </HStack>
           </CardHeader>
           <CardContent>
-            {episode.audioUrl && (
-              <audio
-                controls
-                src={episode.audioUrl}
-                className="mx-auto text-center"
-              />
-            )}
+            <Stack>
+              <div className="text-sm text-muted-foreground">
+                {episode.description}
+              </div>
 
-            <Collapsible>
-              <CollapsibleTrigger asChild className="group">
-                <Button variant="link" size="sm">
-                  ショーノート
-                  <ChevronRightIcon
-                    size="16"
-                    className="transition-transform duration-200 group-data-[state=open]:rotate-90"
-                  />
-                </Button>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <Stack>
-                  {episode.EpisodeSources.map((source) => {
-                    const entry = source.RssEntry
-                    return (
-                      <a
-                        key={entry.id}
-                        href={entry.link}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="ml-8 mr-auto text-sm text-blue-500 hover:underline"
-                      >
-                        <h3>{entry.title}</h3>
-                      </a>
-                    )
-                  })}
-                </Stack>
-              </CollapsibleContent>
-            </Collapsible>
+              {episode.audioUrl && (
+                <audio controls src={episode.audioUrl} className="w-full" />
+              )}
+
+              <Collapsible>
+                <CollapsibleTrigger asChild className="group">
+                  <Button variant="link" size="sm">
+                    ショーノート
+                    <ChevronRightIcon
+                      size="16"
+                      className="transition-transform duration-200 group-data-[state=open]:rotate-90"
+                    />
+                  </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <Stack>
+                    {episode.EpisodeSources.map((source) => {
+                      const entry = source.RssEntry
+                      return (
+                        <a
+                          key={entry.id}
+                          href={entry.link}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="ml-8 mr-auto text-sm text-blue-500 hover:underline"
+                        >
+                          <h3>{entry.title}</h3>
+                        </a>
+                      )
+                    })}
+                  </Stack>
+                </CollapsibleContent>
+              </Collapsible>
+            </Stack>
           </CardContent>
         </Card>
       ))}
