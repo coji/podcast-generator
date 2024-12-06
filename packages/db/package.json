@@ -1,0 +1,37 @@
+{
+  "name": "@podcast-generator/db",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "exports": {
+    "./*": "./src/*"
+  },
+  "scripts": {
+    "build": "tsc -p .",
+    "typecheck": "tsc --build --noEmit",
+    "lint": "biome lint .",
+    "format": "prettier --check .",
+    "validate": "run-s lint format typecheck",
+    "postinstall": "prisma generate"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "npm-run-all": "4.1.5",
+    "prettier": "3.4.2",
+    "prettier-plugin-organize-imports": "4.1.0",
+    "prettier-plugin-tailwindcss": "0.6.9",
+    "prisma": "6.0.1",
+    "tsx": "4.19.2",
+    "typescript": "5.7.2"
+  },
+  "dependencies": {
+    "@prisma/client": "6.0.1"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  }
+}
