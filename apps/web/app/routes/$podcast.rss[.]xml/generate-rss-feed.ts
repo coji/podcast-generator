@@ -73,7 +73,7 @@ export function generateRSSFeed(data: PodcastData): string {
 <rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
   <channel>
     <title>${escapeXML(podcast.title)}</title>
-    <link>${escapeXML(podcast.link)}</link>
+    <link>${escapeXML(`https://podcast.techtalk.jp/${podcast.slug}/`)}</link>
     <language>${escapeXML(podcast.language)}</language>
     <description>${escapeXML(podcast.description)}</description>
     <itunes:author>${escapeXML(podcast.User.name)}</itunes:author>

@@ -31,7 +31,6 @@ model Podcast {
   userId      String   @map("user_id")
   title       String
   description String
-  link        String
   image       String?
   speaker     String
   language    String   @default("ja")
