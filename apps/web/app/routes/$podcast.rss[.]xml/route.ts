@@ -13,6 +13,7 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
   }
   const episodes = await prisma.episode.findMany({
     where: { podcastId: podcast.id },
+    orderBy: { publishedAt: 'desc' },
   })
 
   return new Response(
