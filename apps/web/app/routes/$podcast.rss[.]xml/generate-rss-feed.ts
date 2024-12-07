@@ -103,7 +103,7 @@ export function generateRSSFeed(data: PodcastData): string {
 
       return `
     <item>
-      <title>${escapeXML(ep.title)}</title>
+      <title>#${ep.episodeNumber} ${escapeXML(ep.title)}</title>
       <description>${escapeXML(ep.description)}</description>
       ${enclosure}
       <pubDate>${pubDate}</pubDate>
