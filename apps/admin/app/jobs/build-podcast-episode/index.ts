@@ -37,7 +37,7 @@ export const generatePodcastAudio = async ({
   // Mix speech with background music
   console.log('Mixing speech with background music...')
   const bgmFile = 'admel_theme_song.mp3'
-  const { outputAudioFile, audioDuration } = await mixBgm({
+  const { outputAudioFile, audioDuration, audioLength } = await mixBgm({
     inputAudioFile: speechFile,
     bgmAudioFile: bgmFile,
     userId,
@@ -59,7 +59,8 @@ export const generatePodcastAudio = async ({
     episodeId,
     audioDuration: audioDuration,
     audioUrl,
+    audioLength,
   })
 
-  return { audioUrl, audioDuration, jobId }
+  return { audioUrl, audioDuration, audioLength, jobId }
 }

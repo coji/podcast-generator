@@ -52,7 +52,7 @@ export const synthesizeSpeech = async (
   const accentPhrases: AccentPhrases[] = []
 
   // テキストを行ごとに分割
-  const lines = text.split('\n').filter((line) => line.trim() !== '')
+  const lines = text.split(/[\r\n]+|。/)
   for (const line of lines) {
     // Fetch audio query
     const queryParams = new URLSearchParams({ speaker, text: line })

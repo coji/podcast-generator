@@ -44,5 +44,9 @@ export const mixBgm = async ({
   }),max(1-(t-15)/5,0.1),max(((${bgmDuration}-t)/15*0.1),0)))':eval=frame [bgm]" -map "[bgm]" ${bgmAdjustedFile}`
   await $`ffmpeg -y -hide_banner -i ${inputAudioFile} -i ${bgmAdjustedFile} -filter_complex "[0:a]adelay=15000|15000[delayed_main];[1:a][delayed_main]amix=inputs=2:duration=longest[a]"  -map "[a]" ${outputAudioFile}`
 
-  return { outputAudioFile, audioDuration: bgmDuration }
+  // Get the file size of the output audio file
+  const stats = await fs.stat(outputAudioFile)
+  const audioLength = stats.size
+
+  return { outputAudioFile, audioDuration: bgmDuration, audioLength }
 }
