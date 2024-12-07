@@ -78,12 +78,17 @@ export default function PodcastIndex({
         </CardHeader>
         <CardContent>
           <Stack>
-            <div className="text-muted-foreground text-sm">
+            <div className="text-sm text-muted-foreground">
               {episode.description}
             </div>
 
             {episode.audioUrl && (
-              <audio controls src={episode.audioUrl} className="w-full" />
+              <audio
+                controls
+                src={episode.audioUrl}
+                preload="auto"
+                className="w-full"
+              />
             )}
 
             <Collapsible defaultOpen>
