@@ -60,6 +60,7 @@ export default function PodcastLayout({
                   src="/listen-on-spotify-badge.png"
                   alt="Listen on Spotify"
                   className="mx-auto h-12"
+                  style={{ viewTransitionName: 'spotify-badge' }}
                 />
               </a>
             </div>
