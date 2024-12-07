@@ -13,7 +13,7 @@ const feed = async () => {
       speaker: '497929760',
       slug: 'chanmomo',
       title: 'アグレッシブちゃんもも Podcast',
-      link: 'https://example.com',
+      link: 'https://podcast.techtalk.jp/chanmomo',
       categoryId: 'Entrepreneurship',
       description: 'ちゃんももポッドキャストです',
     },

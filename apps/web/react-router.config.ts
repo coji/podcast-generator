@@ -4,15 +4,17 @@ import type { Config } from '@react-router/dev/config'
 export default {
   ssr: true,
   prerender: async () => {
-    const routes = ['/', '/chanmomo', '/chanmomo/rss.xml']
-    const episodes = await prisma.episode.findMany({
-      where: {
-        Podcast: { slug: 'chanmomo' },
-      },
-      orderBy: { publishedAt: 'desc' },
+    const routes = ['/']
+    const podcasts = await prisma.podcast.findMany({
+      include: { Episode: true },
     })
-    for (const episode of episodes) {
-      routes.push(`/chanmomo/${episode.id}`)
+
+    for (const podcast of podcasts) {
+      routes.push(`/${podcast.slug}`)
+      routes.push(`/${podcast.slug}/rss.xml`)
+      for (const episode of podcast.Episode) {
+        routes.push(`/${podcast.slug}/${episode.id}`)
+      }
     }
     return routes
   },
