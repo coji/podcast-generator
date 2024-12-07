@@ -13,6 +13,13 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
   HStack,
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
   Separator,
   Stack,
 } from '~/components/ui'
@@ -44,12 +51,20 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
   if (!podcast) {
     throw data(null, { status: 404 })
   }
-  const episodes = await listEpisodes(params.podcast)
-  return { podcast, episodes }
+
+  const pageSize = 5
+  const currentPage = params.page ? Number.parseInt(params.page, 10) : 1
+  const { episodes, total } = await listEpisodes(
+    params.podcast,
+    currentPage,
+    pageSize,
+  )
+  const totalPage = Math.ceil(total / pageSize)
+  return { podcast, episodes, currentPage, totalPage, pageSize }
 }
 
 export default function PodcastIndex({
-  loaderData: { episodes },
+  loaderData: { podcast, episodes, currentPage, totalPage, pageSize },
 }: Route.ComponentProps) {
   return (
     <Stack className="gap-8">
@@ -73,7 +88,7 @@ export default function PodcastIndex({
                 </CardDescription>
                 <CardTitle>
                   <Link
-                    to={`${episode.id}`}
+                    to={`/${podcast.slug}/${episode.id}`}
                     key={episode.id}
                     className="hover:underline"
                     viewTransition
@@ -132,6 +147,58 @@ export default function PodcastIndex({
           </CardContent>
         </Card>
       ))}
+
+      {totalPage !== 1 && (
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                to={
+                  currentPage === 1
+                    ? `/${podcast.slug}`
+                    : `/${podcast.slug}/page/${currentPage - 1}`
+                }
+                viewTransition
+              />
+            </PaginationItem>
+            {Array.from({ length: totalPage }).map((_, index) => (
+              <PaginationItem
+                key={`page-${
+                  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                  index
+                }`}
+              >
+                <PaginationLink
+                  to={
+                    index + 1 === 1
+                      ? `/${podcast.slug}`
+                      : `/${podcast.slug}/page/${index + 1}`
+                  }
+                  isActive={index + 1 === currentPage}
+                  viewTransition
+                >
+                  {index + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+            {totalPage > 5 && (
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+            )}
+            <PaginationItem>
+              <PaginationNext
+                to={
+                  currentPage === totalPage
+                    ? `/${podcast.slug}/page/${totalPage}`
+                    : `/${podcast.slug}/page/${currentPage + 1}`
+                }
+                viewTransition
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      )}
     </Stack>
   )
 }

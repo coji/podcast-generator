@@ -10,8 +10,15 @@ export default {
     })
 
     for (const podcast of podcasts) {
-      routes.push(`/${podcast.slug}`)
       routes.push(`/${podcast.slug}/rss.xml`)
+
+      routes.push(`/${podcast.slug}`)
+      const pageSize = 5
+      const totalPage = Math.ceil(podcast.Episode.length / pageSize)
+      for (let page = 1; page <= totalPage; page++) {
+        routes.push(`/${podcast.slug}/page/${page}`)
+      }
+
       for (const episode of podcast.Episode) {
         routes.push(`/${podcast.slug}/${episode.id}`)
       }
