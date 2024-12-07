@@ -25,7 +25,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+          enableColorScheme
+        >
+          {children}
+        </ThemeProvider>
 
         <ScrollRestoration />
         <Scripts />
