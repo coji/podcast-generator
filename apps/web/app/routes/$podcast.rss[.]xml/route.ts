@@ -22,6 +22,7 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
         .filter((ep) => ep.state === 'published') // 公開済みのエピソードのみ
         .filter((ep) => ep.publishedAt) // 公開日が設定されているエピソードのみ
         .filter((ep) => ep.audioUrl) // 音声ファイルが設定されているエピソードのみ
+        .filter((ep) => ep.audioLength) // 音声ファイルの長さが設定されているエピソードのみ
         .filter((ep) => ep.audioDuration) as Parameters<
         typeof generateRSSFeed
       >['0']['episodes'], // 音声の長さが設定されているエピソードのみ
