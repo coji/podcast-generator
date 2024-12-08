@@ -1,4 +1,14 @@
-import { Link, NavLink, Outlet, useNavigate, useParams } from 'react-router'
+import { useEffect } from 'react'
+import {
+  data,
+  Link,
+  NavLink,
+  Outlet,
+  useNavigate,
+  useParams,
+} from 'react-router'
+import { getToast } from 'remix-toast'
+import { toast } from 'sonner'
 import {
   HStack,
   Select,
@@ -10,17 +20,34 @@ import {
 import type { Route } from './+types/route'
 import { listPodcasts } from './queries.server'
 
-export const loader = async ({ params }: Route.LoaderArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
+  const { toast, headers } = await getToast(request)
   const allPodcasts = await listPodcasts()
-  return { allPodcasts }
+  return data({ toast, allPodcasts }, { headers })
 }
 
 export default function PodcastLayout({
-  loaderData: { allPodcasts },
+  loaderData: { toast: toastData, allPodcasts },
 }: Route.ComponentProps) {
   const params = useParams()
   const navigate = useNavigate()
   const podcast = allPodcasts.find((p) => p.slug === params.podcast)
+
+  useEffect(() => {
+    if (!toastData) {
+      return
+    }
+    let toastFn = toast.info
+    if (toastData.type === 'error') {
+      toastFn = toast.error
+    } else if (toastData.type === 'success') {
+      toastFn = toast.success
+    }
+    toastFn(toastData.message, {
+      description: toastData.description,
+      position: 'top-right',
+    })
+  }, [toastData])
 
   return (
     <div className="grid min-h-dvh grid-cols-1 grid-rows-[auto,1fr]">

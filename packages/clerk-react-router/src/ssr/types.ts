@@ -16,7 +16,6 @@ import type {
 import type {
   LoaderFunctionArgs as ReactRouterLoaderFunctionArgs,
   LoaderFunction,
-  DataStrategyFunction as ReactRouterDataStrategyFunction,
 } from 'react-router';
 
 export type GetAuthReturn = Promise<AuthObject>;
@@ -73,9 +72,7 @@ export type RootAuthLoaderCallbackReturn =
   | ObjectLike;
 
 export type LoaderFunctionArgs = ReactRouterLoaderFunctionArgs;
-export type LoaderFunctionReturn =
-  | ReturnType<LoaderFunction>
-  | ReturnType<ReactRouterDataStrategyFunction>;
+export type LoaderFunctionReturn = ReturnType<LoaderFunction>;
 
 export type LoaderFunctionArgsWithAuth<
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>

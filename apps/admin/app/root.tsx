@@ -1,4 +1,5 @@
 import { ClerkApp } from '@podcast-generator/clerk-react-router/client/ClerkApp'
+import { rootAuthLoader } from '@podcast-generator/clerk-react-router/ssr'
 import {
   isRouteErrorResponse,
   Links,
@@ -7,8 +8,6 @@ import {
   Scripts,
   ScrollRestoration,
 } from 'react-router'
-// import { getToast } from 'remix-toast'
-import { rootAuthLoader } from '@podcast-generator/clerk-react-router/ssr'
 import { Toaster } from '~/components/ui'
 import type { Route } from './+types/root'
 import stylesheet from './app.css?url'
@@ -18,8 +17,6 @@ export const links: Route.LinksFunction = () => [
 ]
 
 export const loader = (args: Route.LoaderArgs) => {
-  // const { toast, headers } = await getToast(args.request)
-  // return data({ toastData: toast }, { headers })
   return rootAuthLoader(args)
 }
 
@@ -43,22 +40,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 const App = () => {
-  // useEffect(() => {
-  //   if (!toastData) {
-  //     return
-  //   }
-  //   let toastFn = toast.info
-  //   if (toastData.type === 'error') {
-  //     toastFn = toast.error
-  //   } else if (toastData.type === 'success') {
-  //     toastFn = toast.success
-  //   }
-  //   toastFn(toastData.message, {
-  //     description: toastData.description,
-  //     position: 'top-right',
-  //   })
-  // }, [toastData])
-
   return <Outlet />
 }
 
