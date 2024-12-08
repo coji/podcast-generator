@@ -29,15 +29,35 @@ export const meta = ({ data: { podcast, episode } }: Route.MetaArgs) => {
       content: episode.description,
     },
     {
-      name: 'og:title',
+      property: 'og:url',
+      content: `https://podcast.techtalk.jp/${podcast.slug}/episodes/${episode.id}`,
+    },
+    {
+      property: 'og:type',
+      content: 'article',
+    },
+    {
+      property: 'og:title',
       content: `${episode.title} - ${podcast.title}`,
     },
     {
-      name: 'og:description',
+      property: 'og:description',
       content: episode.description,
     },
     {
-      name: 'og:image',
+      property: 'og:image',
+      content: `https://podcast.techtalk.jp/${podcast.slug}/episodes/${episode.id}/ogp.png`,
+    },
+    {
+      property: 'twitter:card',
+      content: 'summary_large_image',
+    },
+    {
+      property: 'twitter:title',
+      content: `${episode.title} - ${podcast.title}`,
+    },
+    {
+      property: 'twitter:image',
       content: `https://podcast.techtalk.jp/${podcast.slug}/episodes/${episode.id}/ogp.png`,
     },
   ]
