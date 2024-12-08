@@ -38,7 +38,7 @@ export const meta = ({ data: { podcast, episode } }: Route.MetaArgs) => {
     },
     {
       name: 'og:image',
-      content: `/${podcast.slug}/episodes/${episode.id}/ogp`,
+      content: `/${podcast.slug}/episodes/${episode.id}/ogp.png`,
     },
   ]
 }
