@@ -37,6 +37,14 @@ export const meta = ({ data: { podcast, episode } }: Route.MetaArgs) => {
       content: 'article',
     },
     {
+      property: 'og:site_name',
+      content: podcast.title,
+    },
+    {
+      property: 'og:locale',
+      content: 'ja_JP',
+    },
+    {
       property: 'og:title',
       content: `${episode.title} - ${podcast.title}`,
     },
@@ -55,6 +63,10 @@ export const meta = ({ data: { podcast, episode } }: Route.MetaArgs) => {
     {
       property: 'twitter:title',
       content: `${episode.title} - ${podcast.title}`,
+    },
+    {
+      property: 'twitter:description',
+      content: episode.description,
     },
     {
       property: 'twitter:image',
