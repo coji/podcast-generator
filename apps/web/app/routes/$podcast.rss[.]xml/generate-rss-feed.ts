@@ -10,35 +10,23 @@ interface User {
 }
 
 interface Podcast {
-  id: string
   slug: string
-  userId: string
   title: string
   description: string
-  link: string
   image: string | null
-  speaker: string
   language: string
   categoryId: string
-  createdAt: Date
-  updatedAt: Date
   User: User
 }
 
 interface Episode {
   id: string
-  podcastId: string
   title: string
   description: string
-  imageUrl: string | null
-  backgroundMusicId: string | null
   audioUrl: string
   audioDuration: number // 秒単位
   audioLength: number // バイト単位
-  state: string
   publishedAt: Date
-  createdAt: Date
-  updatedAt: Date
   episodeNumber: number
 }
 

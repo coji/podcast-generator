@@ -11,7 +11,17 @@ export const listEpisodes = async (
   limit: number,
 ) => {
   const episodes = await prisma.episode.findMany({
-    include: { EpisodeSources: { include: { RssEntry: true } } },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      audioUrl: true,
+      publishedAt: true,
+      episodeNumber: true,
+      EpisodeSources: {
+        select: { RssEntry: { select: { id: true, title: true, link: true } } },
+      },
+    },
     where: { Podcast: { slug } },
     orderBy: [{ publishedAt: 'desc' }, { createdAt: 'desc' }],
     skip: (page - 1) * limit,

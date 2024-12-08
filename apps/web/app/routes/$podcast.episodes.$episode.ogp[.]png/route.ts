@@ -26,7 +26,8 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
     return data(null, { status: 404 })
   }
 
-  // ダミーで画像を返す
+  console.log(episode)
+
   return await getOgpImageResponse({
     episodeTitle: episode.title,
     episodeNumber: episode.episodeNumber,

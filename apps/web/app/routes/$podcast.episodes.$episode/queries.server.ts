@@ -7,7 +7,19 @@ export const getPodcast = (slug: Podcast['slug']) => {
 
 export const getEpisode = (episodeId: Episode['id']) => {
   return prisma.episode.findUnique({
-    include: { EpisodeSources: { include: { RssEntry: true } } },
+    select: {
+      id: true,
+      publishedAt: true,
+      episodeNumber: true,
+      title: true,
+      description: true,
+      audioUrl: true,
+      audioDuration: true,
+      audioLength: true,
+      EpisodeSources: {
+        select: { RssEntry: { select: { id: true, title: true, link: true } } },
+      },
+    },
     where: { id: episodeId },
   })
 }
