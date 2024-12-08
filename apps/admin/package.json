@@ -21,6 +21,7 @@
     "@date-fns/utc": "2.1.0",
     "@internationalized/date": "3.6.0",
     "@podcast-generator/db": "workspace:*",
+    "@podcast-generator/clerk-react-router": "workspace:*",
     "@radix-ui/react-avatar": "1.1.1",
     "@radix-ui/react-collapsible": "1.1.1",
     "@radix-ui/react-dialog": "1.1.2",

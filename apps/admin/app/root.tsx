@@ -1,6 +1,5 @@
-import { useEffect } from 'react'
+import { ClerkApp } from '@podcast-generator/clerk-react-router/client/ClerkApp'
 import {
-  data,
   isRouteErrorResponse,
   Links,
   Meta,
@@ -8,8 +7,8 @@ import {
   Scripts,
   ScrollRestoration,
 } from 'react-router'
-import { getToast } from 'remix-toast'
-import { toast } from 'sonner'
+// import { getToast } from 'remix-toast'
+import { rootAuthLoader } from '@podcast-generator/clerk-react-router/ssr'
 import { Toaster } from '~/components/ui'
 import type { Route } from './+types/root'
 import stylesheet from './app.css?url'
@@ -18,9 +17,10 @@ export const links: Route.LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
 ]
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  const { toast, headers } = await getToast(request)
-  return data({ toastData: toast }, { headers })
+export const loader = (args: Route.LoaderArgs) => {
+  // const { toast, headers } = await getToast(args.request)
+  // return data({ toastData: toast }, { headers })
+  return rootAuthLoader(args)
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -42,24 +42,22 @@ export function Layout({ children }: { children: React.ReactNode }) {
   )
 }
 
-export default function App({
-  loaderData: { toastData },
-}: Route.ComponentProps) {
-  useEffect(() => {
-    if (!toastData) {
-      return
-    }
-    let toastFn = toast.info
-    if (toastData.type === 'error') {
-      toastFn = toast.error
-    } else if (toastData.type === 'success') {
-      toastFn = toast.success
-    }
-    toastFn(toastData.message, {
-      description: toastData.description,
-      position: 'top-right',
-    })
-  }, [toastData])
+const App = () => {
+  // useEffect(() => {
+  //   if (!toastData) {
+  //     return
+  //   }
+  //   let toastFn = toast.info
+  //   if (toastData.type === 'error') {
+  //     toastFn = toast.error
+  //   } else if (toastData.type === 'success') {
+  //     toastFn = toast.success
+  //   }
+  //   toastFn(toastData.message, {
+  //     description: toastData.description,
+  //     position: 'top-right',
+  //   })
+  // }, [toastData])
 
   return <Outlet />
 }
@@ -92,3 +90,5 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     </main>
   )
 }
+
+export default ClerkApp(App)

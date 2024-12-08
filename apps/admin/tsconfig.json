@@ -16,7 +16,10 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["./app/*"],
-      "@podcast-generator/db/*": ["../../packages/db/src/*"]
+      "@podcast-generator/db/*": ["../../packages/db/src/*"],
+      "@podcast-generator/clerk-react-router/*": [
+        "../../packages/clerk-react-router/src/*"
+      ]
     },
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
