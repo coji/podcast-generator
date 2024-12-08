@@ -88,7 +88,7 @@ export default function PodcastIndex({
                 </CardDescription>
                 <CardTitle>
                   <Link
-                    to={`/${podcast.slug}/${episode.id}`}
+                    to={`/${podcast.slug}/episodes/${episode.id}`}
                     key={episode.id}
                     className="hover:underline"
                     viewTransition

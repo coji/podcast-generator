@@ -20,7 +20,8 @@ export default {
       }
 
       for (const episode of podcast.Episode) {
-        routes.push(`/${podcast.slug}/${episode.id}`)
+        routes.push(`/${podcast.slug}/episodes/${episode.id}`)
+        routes.push(`/${podcast.slug}/episodes/${episode.id}/ogp.png`)
       }
     }
     return routes
