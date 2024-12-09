@@ -1,3 +1,4 @@
+import { UserButton } from '@podcast-generator/clerk-react-router/index'
 import { useEffect } from 'react'
 import {
   data,
@@ -17,13 +18,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '~/components/ui'
+import { requireUser } from '~/services/auth.server'
 import type { Route } from './+types/route'
 import { listPodcasts } from './queries.server'
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { toast, headers } = await getToast(request)
+export const loader = async (args: Route.LoaderArgs) => {
+  const user = await requireUser(args.request)
+  const { toast, headers } = await getToast(args.request)
   const allPodcasts = await listPodcasts()
-  return data({ toast, allPodcasts }, { headers })
+  return data({ user, toast, allPodcasts }, { headers })
 }
 
 export default function PodcastLayout({
@@ -95,10 +98,15 @@ export default function PodcastLayout({
               </NavLink>
             </HStack>
           )}
+
+          <UserButton />
         </HStack>
       </header>
 
-      <main className="bg-slate-200 px-2 py-1 md:px-4 md:py-2">
+      <main
+        className="bg-slate-200 px-2 py-1 md:px-4 md:py-2"
+        key={podcast?.id}
+      >
         <Outlet />
       </main>
     </div>
