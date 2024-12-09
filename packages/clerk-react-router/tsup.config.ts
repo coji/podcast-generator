@@ -7,14 +7,14 @@ export default defineConfig((overrideOptions) => {
   const isWatch = !!overrideOptions.watch;
 
   const options: Options = {
-    format: 'cjs',
+    format: ['esm'],
     outDir: './dist',
     entry: ['./src/**/*.{ts,tsx,js,jsx}'],
     bundle: false,
     clean: true,
     minify: false,
     sourcemap: true,
-    legacyOutput: true,
+    dts: true,
     define: {
       PACKAGE_NAME: `"${name}"`,
       PACKAGE_VERSION: `"${version}"`,
