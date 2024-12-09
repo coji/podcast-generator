@@ -2,7 +2,7 @@ import fs from 'node:fs/promises'
 import { uploadFromFile } from '~/services/r2.server'
 import { mixBgm } from './mix'
 import { updateEpisodeAudioPublished } from './mutations.server'
-import { synthesizeSpeech } from './synthesize-speech'
+import { synthesizeSpeech } from './synthesize'
 
 export const generatePodcastAudio = async ({
   speaker,
@@ -10,14 +10,12 @@ export const generatePodcastAudio = async ({
   userId,
   podcastSlug,
   episodeId,
-  isTest,
 }: {
   speaker: string
   text: string
   userId: string
   podcastSlug: string
   episodeId: string
-  isTest: boolean
 }) => {
   const jobId = crypto.randomUUID()
 
@@ -26,16 +24,10 @@ export const generatePodcastAudio = async ({
 
   // Synthesize speech
   console.log('Synthesizing speech...')
-  const speechFile = await synthesizeSpeech(
-    speaker,
-    text,
-    userId,
-    podcastSlug,
-    isTest,
-  )
+  const speechFile = await synthesizeSpeech(speaker, text, userId, podcastSlug)
 
   // Mix speech with background music
-  console.log('Mixing speech with background music...')
+  console.log('Mixing speech with background music...', podcastSlug)
   const bgmFile = 'admel_theme_song.mp3'
   const { outputAudioFile, audioDuration, audioLength } = await mixBgm({
     inputAudioFile: speechFile,
