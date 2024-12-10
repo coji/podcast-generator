@@ -1,4 +1,4 @@
-import { UserButton } from '@podcast-generator/clerk-react-router/index'
+import { UserButton } from '@clerk/react-router'
 import { useEffect } from 'react'
 import {
   data,

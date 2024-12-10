@@ -1,5 +1,5 @@
-import { SignIn } from '@podcast-generator/clerk-react-router'
-import { getAuth } from '@podcast-generator/clerk-react-router/ssr'
+import { SignIn } from '@clerk/react-router'
+import { getAuth } from '@clerk/react-router/ssr.server'
 import { redirect } from 'react-router'
 import type { Route } from './+types/login'
 

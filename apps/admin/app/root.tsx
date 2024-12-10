@@ -1,5 +1,5 @@
-import { ClerkApp } from '@podcast-generator/clerk-react-router/client/ClerkApp'
-import { rootAuthLoader } from '@podcast-generator/clerk-react-router/ssr'
+import { ClerkProvider } from '@clerk/react-router'
+import { rootAuthLoader } from '@clerk/react-router/ssr.server'
 import {
   isRouteErrorResponse,
   Links,
@@ -39,8 +39,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
   )
 }
 
-const App = () => {
-  return <Outlet />
+export default function App({ loaderData }: Route.ComponentProps) {
+  return (
+    <ClerkProvider loaderData={loaderData}>
+      <Outlet />
+    </ClerkProvider>
+  )
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
@@ -71,5 +75,3 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     </main>
   )
 }
-
-export default ClerkApp(App)

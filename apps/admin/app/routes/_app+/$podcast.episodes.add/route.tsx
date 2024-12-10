@@ -93,7 +93,6 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     userId: podcast.userId,
     podcastSlug: params.podcast,
     episodeId: episode.id,
-    isTest: false,
   })
 
   return {

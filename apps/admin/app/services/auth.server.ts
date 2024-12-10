@@ -1,4 +1,4 @@
-import { getAuth } from '@podcast-generator/clerk-react-router/ssr'
+import { getAuth } from '@clerk/react-router/ssr.server'
 import { redirect } from 'react-router'
 
 export const requireUser = async (request: Request) => {
