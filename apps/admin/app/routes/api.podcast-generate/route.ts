@@ -1,4 +1,4 @@
-import { openai } from '@ai-sdk/openai'
+import { google } from '@ai-sdk/google'
 import { TZDate } from '@date-fns/tz'
 import { prisma } from '@podcast-generator/db/prisma'
 import { streamObject } from 'ai'
@@ -36,6 +36,7 @@ ${mcName}は気さくで陽気な人物です。口調は優しく丁寧で、�
 1. 最初に挨拶し、今日の日付（月、日、曜日）を添えながら、今日のエピソードを紹介することを伝えます。
 2. 「今日紹介する内容」を紹介します。
 3. 最後に締めの挨拶で、今日伝えた内容を駆け足でおさらいし、次回会えるのを楽しみにしていること、詳しい内容はショーノートに書いてあること、番組の感想を募集していることを伝えます。
+4. ですます調で、でもフレンドリーに話すことを心がけてください。
 
 ## 制約
 
@@ -54,9 +55,10 @@ ${entry.content}
 `
 
   const result = await streamObject({
-    model: openai('gpt-4o-mini'),
+    model: google('gemini-2.0-flash-exp', { structuredOutputs: false }),
     schema: responseSchema,
     prompt,
+    mode: 'json',
     onFinish: (event) => {
       const priceInput = (event.usage.promptTokens * 0.00015) / 1000
       const priceOutput = (event.usage.completionTokens * 0.0006) / 1000

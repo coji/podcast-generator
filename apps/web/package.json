@@ -52,16 +52,16 @@
     "sonner": "1.7.1",
     "tailwind-merge": "2.5.5",
     "tailwindcss-animate": "1.0.7",
-    "zod": "3.23.8",
+    "zod": "3.24.1",
     "zodix": "0.4.4"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@cloudflare/workers-types": "^4.20241205.0",
     "@react-router/dev": "7.0.2",
-    "@types/node": "22.10.1",
+    "@types/node": "22.10.2",
     "@types/react": "19.0.1",
-    "@types/react-dom": "19.0.1",
+    "@types/react-dom": "19.0.2",
     "autoprefixer": "10.4.20",
     "postcss": "8.4.49",
     "prettier": "3.4.2",
@@ -71,6 +71,6 @@
     "typescript": "5.7.2",
     "vite": "5.4.11",
     "vite-tsconfig-paths": "5.1.4",
-    "wrangler": "^3.93.0"
+    "wrangler": "^3.95.0"
   }
 }
