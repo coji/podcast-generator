@@ -106,12 +106,18 @@ export default function PodcastLayout({
                 <SidebarMenu>
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <NavLink to={`${podcast.slug}/episodes`}>
+                      <NavLink
+                        to={`${podcast.slug}/episodes`}
+                        className="aria-[current=page]:bg-primary aria-[current=page]:text-white"
+                      >
                         <AudioLinesIcon /> エピソード
                       </NavLink>
                     </SidebarMenuButton>
                     <SidebarMenuButton asChild>
-                      <NavLink to={`${podcast.slug}/feed`}>
+                      <NavLink
+                        to={`${podcast.slug}/feed`}
+                        className="aria-[current=page]:bg-primary aria-[current=page]:text-white"
+                      >
                         <NewspaperIcon />
                         元記事
                       </NavLink>
