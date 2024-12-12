@@ -23,14 +23,14 @@ export default function EntryIndex({
   params,
 }: Route.ComponentProps) {
   return (
-    <Card key={entry.id} className="flex h-full flex-col">
+    <Card key={entry.id}>
       <CardHeader>
         <CardTitle>{entry.title}</CardTitle>
         <CardDescription>{entry.RssFeed.title}</CardDescription>
       </CardHeader>
 
-      <CardContent className="flex flex-1">
-        <Textarea defaultValue={entry.content} className="flex-1" />
+      <CardContent>
+        <Textarea defaultValue={entry.content} />
       </CardContent>
 
       <CardFooter>

@@ -177,18 +177,14 @@ export default function EpisodeNewPage({
     )
 
   return (
-    <Card className="flex flex-1 flex-col">
+    <Card>
       <CardHeader>
         <CardTitle>エピソード 新規作成</CardTitle>
         <CardDescription />
       </CardHeader>
-      <CardContent className="flex flex-1 flex-col">
-        <fetcher.Form
-          method="POST"
-          {...getFormProps(form)}
-          className="flex flex-1 flex-col"
-        >
-          <Stack className="flex-1">
+      <CardContent>
+        <fetcher.Form method="POST" {...getFormProps(form)}>
+          <Stack>
             {/* episode sources */}
             <div>
               <Label htmlFor={fields.sources.id}>元記事</Label>

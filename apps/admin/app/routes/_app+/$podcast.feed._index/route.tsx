@@ -34,7 +34,7 @@ export default function PodcastManager({
   return (
     <Stack>
       <HStack>
-        <h2 className="flex-1 text-xl font-semibold">元記事</h2>
+        <h2 className="text-xl font-semibold">元記事</h2>
         <fetcher.Form method="POST">
           <Button
             size="sm"
@@ -47,7 +47,7 @@ export default function PodcastManager({
       </HStack>
 
       {entries.map((entry) => (
-        <Link key={entry.id} to={entry.id} preventScrollReset className="group">
+        <Link key={entry.id} to={entry.id} preventScrollReset>
           <RssEntry entry={entry} feedTitle={entry.RssFeed.title} />
         </Link>
       ))}

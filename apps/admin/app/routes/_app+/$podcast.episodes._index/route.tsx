@@ -30,7 +30,7 @@ export default function EpisodesLayout({
 }: Route.ComponentProps) {
   return (
     <Stack>
-      <HStack className="bg-slate-200 pb-2">
+      <HStack className="pb-2">
         <h2 className="flex-1 text-xl font-semibold">エピソード</h2>
         <div>
           <Button type="button" size="sm" variant="link" asChild>
@@ -40,7 +40,7 @@ export default function EpisodesLayout({
       </HStack>
 
       {episodes.map((episode) => (
-        <Card key={episode.id} className="mx-auto max-w-lg">
+        <Card key={episode.id} className="mx-auto w-full">
           <CardHeader>
             <HStack className="gap-4">
               <div className="text-xl font-medium">

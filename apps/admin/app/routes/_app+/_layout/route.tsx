@@ -1,4 +1,5 @@
 import { UserButton } from '@clerk/react-router'
+import { AudioLinesIcon, NewspaperIcon, PodcastIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import {
   data,
@@ -12,11 +13,24 @@ import { getToast } from 'remix-toast'
 import { toast } from 'sonner'
 import {
   HStack,
+  Label,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
 } from '~/components/ui'
 import { requireUser } from '~/services/auth.server'
 import type { Route } from './+types/route'
@@ -53,21 +67,24 @@ export default function PodcastLayout({
   }, [toastData])
 
   return (
-    <div className="grid min-h-dvh grid-cols-1 grid-rows-[auto,1fr]">
-      <header className="px-2 py-1 md:px-4 md:py-2">
-        <HStack className="flex-wrap">
-          <h1 className="text-2xl font-bold">
+    <SidebarProvider>
+      <Sidebar>
+        <SidebarHeader>
+          <h1 className="text-lg font-bold">
             <Link to="/">Podcast Manager</Link>
           </h1>
 
-          <div>
+          <HStack className="w-full">
+            <Label htmlFor="podcast-select">
+              <PodcastIcon size="16" />
+            </Label>
             <Select
               value={podcast?.slug ?? ''}
               onValueChange={(value) => {
                 navigate(`/${value}/episodes`)
               }}
             >
-              <SelectTrigger>
+              <SelectTrigger id="podcast-select" className="whitespace-normal">
                 <SelectValue placeholder="ポッドキャスト選択" />
               </SelectTrigger>
               <SelectContent>
@@ -78,37 +95,43 @@ export default function PodcastLayout({
                 ))}
               </SelectContent>
             </Select>
-          </div>
+          </HStack>
+        </SidebarHeader>
 
-          <div className="flex-1" />
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupLabel>Contenet</SidebarGroupLabel>
+            <SidebarGroupContent>
+              {podcast && (
+                <SidebarMenu>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild>
+                      <NavLink to={`${podcast.slug}/episodes`}>
+                        <AudioLinesIcon /> エピソード
+                      </NavLink>
+                    </SidebarMenuButton>
+                    <SidebarMenuButton asChild>
+                      <NavLink to={`${podcast.slug}/feed`}>
+                        <NewspaperIcon />
+                        元記事
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </SidebarMenu>
+              )}
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
 
-          {podcast && (
-            <HStack className="gap-2 rounded-md bg-slate-200 p-1 text-sm font-medium">
-              <NavLink
-                to={`${podcast.slug}/episodes`}
-                className="rounded-md px-3 py-1 ring-offset-background aria-[current]:bg-card aria-[current]:shadow"
-              >
-                エピソード
-              </NavLink>
-              <NavLink
-                to={`${podcast.slug}/feed`}
-                className="rounded-md px-3 py-1 ring-offset-background aria-[current]:bg-card aria-[current]:shadow"
-              >
-                元記事
-              </NavLink>
-            </HStack>
-          )}
+        <SidebarFooter>
+          <UserButton showName />
+        </SidebarFooter>
+      </Sidebar>
 
-          <UserButton />
-        </HStack>
-      </header>
-
-      <main
-        className="bg-slate-200 px-2 py-1 md:px-4 md:py-2"
-        key={podcast?.id}
-      >
+      <main className="w-full px-2 py-1 md:px-4 md:py-2" key={podcast?.id}>
+        <SidebarTrigger className="h-4 w-4" />
         <Outlet />
       </main>
-    </div>
+    </SidebarProvider>
   )
 }
