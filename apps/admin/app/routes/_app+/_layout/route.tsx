@@ -23,7 +23,7 @@ import type { Route } from './+types/route'
 import { listPodcasts } from './queries.server'
 
 export const loader = async (args: Route.LoaderArgs) => {
-  const user = await requireUser(args.request)
+  const user = await requireUser(args)
   const { toast, headers } = await getToast(args.request)
   const allPodcasts = await listPodcasts()
   return data({ user, toast, allPodcasts }, { headers })

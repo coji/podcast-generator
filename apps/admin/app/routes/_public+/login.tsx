@@ -1,11 +1,11 @@
 import { SignIn } from '@clerk/react-router'
-import { getAuth } from '@clerk/react-router/ssr.server'
 import { redirect } from 'react-router'
+import { getUser } from '~/services/auth.server'
 import type { Route } from './+types/login'
 
 export const loader = async (args: Route.LoaderArgs) => {
-  const auth = await getAuth(args)
-  if (auth.userId) {
+  const user = await getUser(args)
+  if (user) {
     return redirect('/')
   }
   return null

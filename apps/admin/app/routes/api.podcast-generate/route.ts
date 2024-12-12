@@ -4,11 +4,13 @@ import { prisma } from '@podcast-generator/db/prisma'
 import { streamObject } from 'ai'
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
+import { requireUser } from '~/services/auth.server'
 import type { Route } from './+types/route'
 import { requestSchema, responseSchema } from './schema'
 
-export const action = async ({ request }: Route.ActionArgs) => {
-  const { data, error } = requestSchema.safeParse(await request.json())
+export const action = async (args: Route.ActionArgs) => {
+  requireUser(args)
+  const { data, error } = requestSchema.safeParse(await args.request.json())
   if (error) {
     throw new Error('Invalid request')
   }
