@@ -1,4 +1,4 @@
-import { UserButton } from '@clerk/react-router'
+import { OrganizationSwitcher, UserButton } from '@clerk/react-router'
 import { AudioLinesIcon, NewspaperIcon, PodcastIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import {
@@ -73,6 +73,11 @@ export default function PodcastLayout({
           <h1 className="text-lg font-bold">
             <Link to="/">Podcast Manager</Link>
           </h1>
+
+          <OrganizationSwitcher
+            afterSelectOrganizationUrl="/"
+            hidePersonal={true}
+          />
 
           <HStack className="w-full">
             <Label htmlFor="podcast-select">
