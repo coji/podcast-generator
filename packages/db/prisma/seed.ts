@@ -5,17 +5,19 @@ import { testFeed } from './test-feed'
 const prisma = new PrismaClient()
 
 const feed = async () => {
-  let user = await importClerkObjects(prisma, 'coji@techtalk.jp')
-  if (!user) {
+  const org = await importClerkObjects(prisma, 'coji@techtalk.jp')
+  if (!org) {
     // no seed user
     return
   }
 
   const podcast = await prisma.podcast.create({
     data: {
-      userId: user.id,
+      organizationId: org.id,
       speaker: '497929760',
       slug: 'chanmomo',
+      authorName: 'ちゃんもも',
+      authorEmail: 'chanmomo@example.com',
       title: 'アグレッシブちゃんもも Podcast',
       categoryId: 'Entrepreneurship',
       description: 'ちゃんももポッドキャストです',

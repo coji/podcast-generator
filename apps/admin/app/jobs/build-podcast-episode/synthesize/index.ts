@@ -14,10 +14,10 @@ import { splitTextIntoLines } from './utils'
 export const synthesizeSpeech = async (
   speaker: string,
   text: string,
-  userId: string,
+  organizationId: string,
   podcastSlug: string,
 ): Promise<string> => {
-  const baseDir = path.join('./data', userId, podcastSlug)
+  const baseDir = path.join('./data', organizationId, podcastSlug)
   const tmpDir = path.join(baseDir, 'tmp')
 
   // Create directories

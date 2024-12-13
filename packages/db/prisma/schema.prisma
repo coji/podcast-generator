@@ -20,19 +20,20 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  Podcast                    Podcast[]
   organizationUserMembership OrganizationMembership[]
 
   @@map("users")
 }
 
 model Organization {
-  id                         String                       @id @default(uuid())
-  name                       String
-  slug                       String
-  createdAt                  DateTime                     @default(now()) @map("created_at")
-  updatedAt                  DateTime                     @default(now()) @updatedAt @map("updated_at")
+  id        String   @id @default(uuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
   OrganizationUserMembership OrganizationMembership[]
+  Podcast                    Podcast[]
 
   @@map("organizations")
 }
@@ -49,24 +50,27 @@ model OrganizationMembership {
 
   User         User         @relation(fields: [userId], references: [id])
   Organization Organization @relation(fields: [organizationId], references: [id])
+
   @@map("organization_memberships")
 }
 
 model Podcast {
-  id          String   @id @default(uuid())
-  slug        String   @unique
-  userId      String   @map("user_id")
-  title       String
-  description String
-  image       String?
-  speaker     String
-  language    String   @default("ja")
-  categoryId  String   @map("category_id")
-  spotifyUrl  String?  @map("spotify_url")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+  id             String   @id @default(uuid())
+  slug           String   @unique
+  organizationId String   @map("organization_id")
+  authorName     String   @map("author_name")
+  authorEmail    String   @map("author_email")
+  title          String
+  description    String
+  image          String?
+  speaker        String
+  language       String   @default("ja")
+  categoryId     String   @map("category_id")
+  spotifyUrl     String?  @map("spotify_url")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at")
 
-  User            User              @relation(fields: [userId], references: [id])
+  Organization    Organization      @relation(fields: [organizationId], references: [id])
   RssFeed         RssFeed[]
   Episode         Episode[]
   BackgroundMusic BackgroundMusic[]

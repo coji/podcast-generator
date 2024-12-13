@@ -7,13 +7,13 @@ import { synthesizeSpeech } from './synthesize'
 export const generatePodcastAudio = async ({
   speaker,
   text,
-  userId,
+  organizationId,
   podcastSlug,
   episodeId,
 }: {
   speaker: string
   text: string
-  userId: string
+  organizationId: string
   podcastSlug: string
   episodeId: string
 }) => {
@@ -24,7 +24,12 @@ export const generatePodcastAudio = async ({
 
   // Synthesize speech
   console.log('Synthesizing speech...')
-  const speechFile = await synthesizeSpeech(speaker, text, userId, podcastSlug)
+  const speechFile = await synthesizeSpeech(
+    speaker,
+    text,
+    organizationId,
+    podcastSlug,
+  )
 
   // Mix speech with background music
   console.log('Mixing speech with background music...', podcastSlug)
@@ -32,7 +37,7 @@ export const generatePodcastAudio = async ({
   const { outputAudioFile, audioDuration, audioLength } = await mixBgm({
     inputAudioFile: speechFile,
     bgmAudioFile: bgmFile,
-    userId,
+    organizationId,
     podcastSlug,
   })
 

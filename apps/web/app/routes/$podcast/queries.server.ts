@@ -9,7 +9,6 @@ export const getPodcast = (slug: Podcast['slug']) => {
       title: true,
       image: true,
       spotifyUrl: true,
-      User: { select: { id: true, name: true } },
     },
     where: { slug },
   })

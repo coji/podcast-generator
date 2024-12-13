@@ -5,7 +5,6 @@ import { generateRSSFeed } from './generate-rss-feed'
 
 export const loader = async ({ params }: Route.LoaderArgs) => {
   const podcast = await prisma.podcast.findUnique({
-    include: { User: true },
     where: { slug: params.podcast },
   })
   if (!podcast) {

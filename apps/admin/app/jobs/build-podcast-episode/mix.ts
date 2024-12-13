@@ -35,17 +35,17 @@ export const mixAudio = async (
 export const mixBgm = async ({
   inputAudioFile,
   bgmAudioFile,
-  userId,
+  organizationId,
   podcastSlug,
 }: {
   inputAudioFile: string
   bgmAudioFile: string
-  userId: string
+  organizationId: string
   podcastSlug: string
 }) => {
-  const baseDir = path.join('./data', userId, podcastSlug)
+  const baseDir = path.join('./data', organizationId, podcastSlug)
   const tmpDir = path.join(baseDir, 'tmp')
-  const bgmDir = path.join('./data', userId, 'bgm')
+  const bgmDir = path.join('./data', organizationId, 'bgm')
   const outputDir = path.join(baseDir, 'publish')
 
   await fs.mkdir(tmpDir, { recursive: true })

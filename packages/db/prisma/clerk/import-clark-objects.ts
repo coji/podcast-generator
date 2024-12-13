@@ -1,4 +1,4 @@
-import type { PrismaClient, User } from '@prisma/client'
+import type { Organization, PrismaClient, User } from '@prisma/client'
 import clerkObjects from './clerk-data.json'
 
 export const importClerkObjects = async (
@@ -6,6 +6,7 @@ export const importClerkObjects = async (
   seedUserEmail: string,
 ) => {
   let seedUser: User | null = null
+  let seedOrganization: Organization | null = null
   // users
   for (const user of clerkObjects.users) {
     const upserted = await prisma.user.upsert({
@@ -29,7 +30,7 @@ export const importClerkObjects = async (
 
   // organization memberships
   for (const membership of clerkObjects.organizationMemberships) {
-    await prisma.organizationMembership.upsert({
+    const upserted = await prisma.organizationMembership.upsert({
       where: { id: membership.id },
       update: {
         userId: membership.userId,
@@ -44,7 +45,13 @@ export const importClerkObjects = async (
         permissions: membership.permissions,
       },
     })
+
+    if (upserted.userId === seedUser?.id) {
+      seedOrganization = await prisma.organization.findUnique({
+        where: { id: upserted.organizationId },
+      })
+    }
   }
 
-  return seedUser
+  return seedOrganization
 }

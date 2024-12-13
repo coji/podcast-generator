@@ -1,22 +1,15 @@
 // TypeScript 関数: generateRSSFeed
 
 // インターフェースの定義
-interface User {
-  id: string
-  name: string
-  email: string
-  createdAt: Date
-  updatedAt: Date
-}
-
 interface Podcast {
   slug: string
+  authorName: string
+  authorEmail: string
   title: string
   description: string
   image: string | null
   language: string
   categoryId: string
-  User: User
 }
 
 interface Episode {
@@ -64,14 +57,14 @@ export function generateRSSFeed(data: PodcastData): string {
     <link>${escapeXML(`https://podcast.techtalk.jp/${podcast.slug}/`)}</link>
     <language>${escapeXML(podcast.language)}</language>
     <description>${escapeXML(podcast.description)}</description>
-    <itunes:author>${escapeXML(podcast.User.name)}</itunes:author>
+    <itunes:author>${escapeXML(podcast.authorName)}</itunes:author>
     <itunes:summary>${escapeXML(podcast.description)}</itunes:summary>
     ${podcast.image ? `<itunes:image href="${escapeXML(podcast.image)}"/>` : ''}
     <itunes:category text="${escapeXML(podcast.categoryId)}"/>
     <itunes:explicit>no</itunes:explicit>
     <itunes:owner>
-      <itunes:name>${escapeXML(podcast.User.name)}</itunes:name>
-      <itunes:email>${escapeXML(podcast.User.email)}</itunes:email>
+      <itunes:name>${escapeXML(podcast.authorName)}</itunes:name>
+      <itunes:email>${escapeXML(podcast.authorEmail)}</itunes:email>
     </itunes:owner>
 `
 

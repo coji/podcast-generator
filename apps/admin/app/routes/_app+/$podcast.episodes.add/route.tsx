@@ -90,7 +90,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   const { jobId, audioUrl, audioDuration } = await generatePodcastAudio({
     speaker: podcast.speaker, // Use the podcast speaker
     text: submission.value.manuscript,
-    userId: podcast.userId,
+    organizationId: podcast.organizationId,
     podcastSlug: params.podcast,
     episodeId: episode.id,
   })

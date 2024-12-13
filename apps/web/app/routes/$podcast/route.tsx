@@ -73,7 +73,7 @@ export default function PodcastLayout({
       </main>
 
       <footer className="pb-4 pt-32 text-center text-sm">
-        Copyright &copy; {new Date().getFullYear()} {podcast.User.name}{' '}
+        Copyright &copy; {new Date().getFullYear()} TechTalk
       </footer>
     </Stack>
   )
