@@ -1,4 +1,4 @@
-import { Link, redirect } from 'react-router'
+import { Link } from 'react-router'
 import {
   Card,
   CardContent,
@@ -12,11 +12,8 @@ import type { Route } from './+types/route'
 import { listPodcasts } from './queries.server'
 
 export const loader = async (args: Route.LoaderArgs) => {
-  await requireUser(args)
-  const podcasts = await listPodcasts('testuser')
-  if (podcasts.length === 1) {
-    throw redirect(`/podcast/${podcasts[0].id}/feed`)
-  }
+  const user = await requireUser(args)
+  const podcasts = user.orgId ? await listPodcasts(user.orgId) : []
   return { podcasts }
 }
 

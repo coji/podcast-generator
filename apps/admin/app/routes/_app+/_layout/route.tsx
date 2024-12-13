@@ -39,7 +39,7 @@ import { listPodcasts } from './queries.server'
 export const loader = async (args: Route.LoaderArgs) => {
   const user = await requireUser(args)
   const { toast, headers } = await getToast(args.request)
-  const allPodcasts = await listPodcasts()
+  const allPodcasts = user.orgId ? await listPodcasts(user.orgId) : []
   return data({ user, toast, allPodcasts }, { headers })
 }
 

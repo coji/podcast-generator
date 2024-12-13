@@ -1,6 +1,6 @@
-import type { User } from '@podcast-generator/db/prisma'
+import type { Organization } from '@clerk/react-router/ssr.server'
 import { prisma } from '@podcast-generator/db/prisma'
 
-export const listPodcasts = async (userId: User['id']) => {
-  return await prisma.podcast.findMany({})
+export const listPodcasts = async (organizationId: Organization['id']) => {
+  return await prisma.podcast.findMany({ where: { organizationId } })
 }
