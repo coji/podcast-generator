@@ -70,13 +70,21 @@ export default function PodcastLayout({
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader>
-          <h1 className="text-lg font-bold">
+          <h1 className="text-lg font-medium">
             <Link to="/">Podcast Manager</Link>
           </h1>
 
           <OrganizationSwitcher
             afterSelectOrganizationUrl="/"
             hidePersonal={true}
+            appearance={{
+              elements: {
+                rootBox: 'w-full',
+                organizationSwitcherTrigger: 'flex-1',
+                organizationPreview: 'flex-1',
+                organizationPreviewTextContainer: 'flex-1',
+              },
+            }}
           />
 
           <HStack className="w-full">
@@ -135,7 +143,15 @@ export default function PodcastLayout({
         </SidebarContent>
 
         <SidebarFooter>
-          <UserButton showName />
+          <UserButton
+            showName
+            appearance={{
+              elements: {
+                rootBox: 'w-full',
+                userButtonTrigger: 'flex-1',
+              },
+            }}
+          />
         </SidebarFooter>
       </Sidebar>
 
