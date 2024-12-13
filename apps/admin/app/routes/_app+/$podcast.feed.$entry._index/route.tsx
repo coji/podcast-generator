@@ -4,7 +4,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
   HStack,
@@ -25,23 +24,23 @@ export default function EntryIndex({
   return (
     <Card key={entry.id}>
       <CardHeader>
-        <CardTitle>{entry.title}</CardTitle>
-        <CardDescription>{entry.RssFeed.title}</CardDescription>
-      </CardHeader>
-
-      <CardContent>
-        <Textarea defaultValue={entry.content} />
-      </CardContent>
-
-      <CardFooter>
         <HStack>
+          <div>
+            <CardTitle>{entry.title}</CardTitle>
+            <CardDescription>{entry.RssFeed.title}</CardDescription>
+          </div>
+          <div className="flex-1" />
           <Button type="button" asChild>
             <Link to={`/${params.podcast}/episodes/add?source=${entry.id}`}>
               この記事を元にエピソードを生成
             </Link>
           </Button>
         </HStack>
-      </CardFooter>
+      </CardHeader>
+
+      <CardContent>
+        <Textarea defaultValue={entry.content} />
+      </CardContent>
     </Card>
   )
 }

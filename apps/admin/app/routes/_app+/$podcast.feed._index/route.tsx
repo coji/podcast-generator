@@ -47,7 +47,7 @@ export default function PodcastManager({
       </HStack>
 
       {entries.map((entry) => (
-        <Link key={entry.id} to={entry.id} preventScrollReset>
+        <Link key={entry.id} to={entry.id}>
           <RssEntry entry={entry} feedTitle={entry.RssFeed.title} />
         </Link>
       ))}
