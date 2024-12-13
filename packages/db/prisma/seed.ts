@@ -1,19 +1,22 @@
 import { PrismaClient } from '@prisma/client'
+import { importClerkObjects } from './clerk/import-clark-objects'
 import { testFeed } from './test-feed'
 
 const prisma = new PrismaClient()
 
 const feed = async () => {
-  const user = await prisma.user.create({
-    data: { name: 'coji', email: 'coji@techtalk.jp' },
-  })
+  let user = await importClerkObjects(prisma, 'coji@techtalk.jp')
+  if (!user) {
+    // no seed user
+    return
+  }
+
   const podcast = await prisma.podcast.create({
     data: {
       userId: user.id,
       speaker: '497929760',
       slug: 'chanmomo',
       title: 'アグレッシブちゃんもも Podcast',
-      link: 'https://podcast.techtalk.jp/chanmomo',
       categoryId: 'Entrepreneurship',
       description: 'ちゃんももポッドキャストです',
     },

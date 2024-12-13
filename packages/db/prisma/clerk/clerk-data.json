@@ -1,0 +1,37 @@
+{
+  "users": [
+    {
+      "id": "user_2pw9Eu8NsRPmtjZiGQkCtblH6bV",
+      "email": "coji@techtalk.jp",
+      "name": "no name"
+    }
+  ],
+  "organizations": [
+    {
+      "id": "org_2q941blgmbRfk6RFoOX3QQIZFhg",
+      "name": "admel",
+      "slug": "admel"
+    },
+    {
+      "id": "org_2q9410e1qN63cMu12xAhiVt7HcT",
+      "name": "techtalk",
+      "slug": "techtalk"
+    }
+  ],
+  "organizationMemberships": [
+    {
+      "id": "orgmem_2q944nCM92VBtzAme2j2xLr09ah",
+      "userId": "user_2pw9Eu8NsRPmtjZiGQkCtblH6bV",
+      "organizationId": "org_2q9410e1qN63cMu12xAhiVt7HcT",
+      "role": "org:member",
+      "permissions": "[\"org:sys_memberships:read\"]"
+    },
+    {
+      "id": "orgmem_2q943PF7HI0nOZytZkH9zVu37pj",
+      "userId": "user_2pw9Eu8NsRPmtjZiGQkCtblH6bV",
+      "organizationId": "org_2q941blgmbRfk6RFoOX3QQIZFhg",
+      "role": "org:admin",
+      "permissions": "[\"org:sys_domains:read\",\"org:sys_domains:manage\",\"org:sys_profile:manage\",\"org:sys_profile:delete\",\"org:sys_memberships:read\",\"org:sys_memberships:manage\"]"
+    }
+  ]
+}

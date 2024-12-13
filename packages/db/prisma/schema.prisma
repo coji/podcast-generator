@@ -20,9 +20,36 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  Podcast Podcast[]
+  Podcast                    Podcast[]
+  organizationUserMembership OrganizationMembership[]
 
   @@map("users")
+}
+
+model Organization {
+  id                         String                       @id @default(uuid())
+  name                       String
+  slug                       String
+  createdAt                  DateTime                     @default(now()) @map("created_at")
+  updatedAt                  DateTime                     @default(now()) @updatedAt @map("updated_at")
+  OrganizationUserMembership OrganizationMembership[]
+
+  @@map("organizations")
+}
+
+model OrganizationMembership {
+  id             String @id @default(uuid())
+  organizationId String @map("organization_id")
+  userId         String @map("user_id")
+  role           String
+  permissions    String // JSON Array
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  User         User         @relation(fields: [userId], references: [id])
+  Organization Organization @relation(fields: [organizationId], references: [id])
+  @@map("organization_memberships")
 }
 
 model Podcast {
