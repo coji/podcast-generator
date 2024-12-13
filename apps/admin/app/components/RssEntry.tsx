@@ -20,7 +20,7 @@ interface RssEntryProps extends React.ComponentPropsWithoutRef<typeof Card> {
 export function RssEntry({ entry, feedTitle, className }: RssEntryProps) {
   return (
     <Card key={entry.id} className={className}>
-      <CardHeader className="p-2">
+      <CardHeader>
         <HStack>
           <div className="flex-1 text-sm">
             {format(
@@ -34,7 +34,7 @@ export function RssEntry({ entry, feedTitle, className }: RssEntryProps) {
         </HStack>
         <CardTitle className="line-clamp-1">{entry.title}</CardTitle>
       </CardHeader>
-      <CardContent className="px-2 pb-2">
+      <CardContent>
         <div className="font-light">{feedTitle}</div>
       </CardContent>
     </Card>
