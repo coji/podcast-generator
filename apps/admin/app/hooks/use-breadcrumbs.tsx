@@ -39,12 +39,12 @@ export const useBreadcrumbs = () => {
       <BreadcrumbList>
         {breadcrumbs.map((breadcrumb) => (
           <React.Fragment key={breadcrumb.id}>
+            <BreadcrumbSeparator />
             <BreadcrumbItem key={breadcrumb.id}>
-              <BreadcrumbSeparator />
+              <BreadcrumbLink asChild>
+                <Link to={breadcrumb.to || ''}>{breadcrumb.breadcrumbs}</Link>
+              </BreadcrumbLink>
             </BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link to={breadcrumb.to || ''}>{breadcrumb.breadcrumbs}</Link>
-            </BreadcrumbLink>
           </React.Fragment>
         ))}
       </BreadcrumbList>
