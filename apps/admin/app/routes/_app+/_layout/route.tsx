@@ -1,4 +1,8 @@
-import { OrganizationSwitcher, UserButton } from '@clerk/react-router'
+import {
+  ClerkLoaded,
+  OrganizationSwitcher,
+  UserButton,
+} from '@clerk/react-router'
 import { AudioLinesIcon, NewspaperIcon, PodcastIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import {
@@ -74,18 +78,22 @@ export default function PodcastLayout({
             <Link to="/">Podcast Manager</Link>
           </h1>
 
-          <OrganizationSwitcher
-            afterSelectOrganizationUrl="/"
-            hidePersonal={true}
-            appearance={{
-              elements: {
-                rootBox: 'w-full',
-                organizationSwitcherTrigger: 'flex-1',
-                organizationPreview: 'flex-1',
-                organizationPreviewTextContainer: 'flex-1',
-              },
-            }}
-          />
+          <div className="h-7">
+            <ClerkLoaded>
+              <OrganizationSwitcher
+                afterSelectOrganizationUrl="/"
+                hidePersonal={true}
+                appearance={{
+                  elements: {
+                    rootBox: 'w-full',
+                    organizationSwitcherTrigger: 'flex-1',
+                    organizationPreview: 'flex-1',
+                    organizationPreviewTextContainer: 'flex-1',
+                  },
+                }}
+              />
+            </ClerkLoaded>
+          </div>
 
           <HStack className="w-full">
             <Label htmlFor="podcast-select">
@@ -143,15 +151,19 @@ export default function PodcastLayout({
         </SidebarContent>
 
         <SidebarFooter>
-          <UserButton
-            showName
-            appearance={{
-              elements: {
-                rootBox: 'w-full',
-                userButtonTrigger: 'flex-1',
-              },
-            }}
-          />
+          <div className="h-7">
+            <ClerkLoaded>
+              <UserButton
+                showName
+                appearance={{
+                  elements: {
+                    rootBox: 'w-full',
+                    userButtonTrigger: 'flex-1',
+                  },
+                }}
+              />
+            </ClerkLoaded>
+          </div>
         </SidebarFooter>
       </Sidebar>
 
