@@ -35,7 +35,9 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
+  Stack,
 } from '~/components/ui'
+import { useBreadcrumbs } from '~/hooks/use-breadcrumbs'
 import { requireUser } from '~/services/auth.server'
 import type { Route } from './+types/route'
 import { listPodcasts } from './queries.server'
@@ -50,9 +52,10 @@ export const loader = async (args: Route.LoaderArgs) => {
 export default function PodcastLayout({
   loaderData: { toast: toastData, allPodcasts },
 }: Route.ComponentProps) {
-  const params = useParams()
   const navigate = useNavigate()
+  const params = useParams()
   const podcast = allPodcasts.find((p) => p.slug === params.podcast)
+  const Breadcrumbs = useBreadcrumbs()
 
   useEffect(() => {
     if (!toastData) {
@@ -167,9 +170,15 @@ export default function PodcastLayout({
         </SidebarFooter>
       </Sidebar>
 
-      <main className="w-full px-2 py-1 md:px-4 md:py-2" key={podcast?.id}>
-        <SidebarTrigger className="h-4 w-4" />
-        <Outlet />
+      <main className="w-full px-2 py-1 md:px-2 md:py-2" key={podcast?.id}>
+        <Stack>
+          <HStack>
+            <SidebarTrigger className="h-4 w-4" />
+            {Breadcrumbs}
+          </HStack>
+
+          <Outlet />
+        </Stack>
       </main>
     </SidebarProvider>
   )
