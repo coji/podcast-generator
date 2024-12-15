@@ -1,4 +1,4 @@
-import { Link } from 'react-router'
+import { Link, type Params } from 'react-router'
 import {
   Button,
   Card,
@@ -11,6 +11,16 @@ import {
 } from '~/components/ui'
 import type { Route } from './+types/route'
 import { getEntry } from './queries.server'
+
+export const handle = {
+  breadcrumbs: ({
+    loaderData,
+    params,
+  }: {
+    loaderData: Awaited<ReturnType<typeof loader>>
+    params: Params
+  }) => <Link to={`/${params.podcast}/feed/${params.entry}`}>詳細</Link>,
+}
 
 export const loader = async ({ params }: Route.LoaderArgs) => {
   const entry = await getEntry(params.entry)

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, useMatches, type UIMatch } from 'react-router'
+import { useMatches, type Params, type UIMatch } from 'react-router'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,8 +11,13 @@ import {
 function isBreadcrumbMatch<Data>(match?: UIMatch<Data>): match is UIMatch<
   Data,
   {
-    breadcrumbs: (data: unknown) => string
-    to?: string
+    breadcrumbs: ({
+      loaderData,
+      params,
+    }: {
+      loaderData: Data
+      params: Params
+    }) => React.ReactNode
   }
 > {
   if (!match) return false
@@ -28,8 +33,10 @@ export const useBreadcrumbs = () => {
     .filter((match) => isBreadcrumbMatch(match))
     .map((match) => ({
       id: match.id,
-      breadcrumbs: match.handle.breadcrumbs(match.data),
-      to: match.handle.to,
+      breadcrumbs: match.handle.breadcrumbs({
+        loaderData: match.data,
+        params: match.params,
+      }),
     }))
 
   if (breadcrumbs.length === 0) return null
@@ -41,9 +48,7 @@ export const useBreadcrumbs = () => {
           <React.Fragment key={breadcrumb.id}>
             <BreadcrumbSeparator />
             <BreadcrumbItem key={breadcrumb.id}>
-              <BreadcrumbLink asChild>
-                <Link to={breadcrumb.to || ''}>{breadcrumb.breadcrumbs}</Link>
-              </BreadcrumbLink>
+              <BreadcrumbLink asChild>{breadcrumb.breadcrumbs}</BreadcrumbLink>
             </BreadcrumbItem>
           </React.Fragment>
         ))}
