@@ -1,5 +1,7 @@
-import type { Episode } from '@podcast-generator/db/prisma'
+// src/mutations/episodeMutations.ts
+
 import { prisma } from '@podcast-generator/db/prisma'
+import type { Episode } from '../domain/episode'
 
 export const updateEpisodeAudioPublished = async ({
   episodeId,

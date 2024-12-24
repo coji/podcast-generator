@@ -29,7 +29,7 @@ import {
   Stack,
   Textarea,
 } from '~/components/ui'
-import { generatePodcastAudio } from '~/jobs/build-podcast-episode'
+import { generatePodcastAudio } from '~/jobs'
 import { SourceSelector } from '~/routes/_app+/$podcast.feed.selector/SourceSelector'
 import { responseSchema } from '~/routes/api.podcast-generate/schema'
 import type { Route } from './+types/route'

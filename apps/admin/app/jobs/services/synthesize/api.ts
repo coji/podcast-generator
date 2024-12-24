@@ -1,6 +1,11 @@
+// src/synthesize/api.ts
+
+import { fetchArrayBuffer, postRequest } from '../../infrastructure/apiClient'
 import type { AccentPhrases } from './types'
 
-// Utility function to fetch accent phrases
+const AUDIO_QUERY_URL = 'http://localhost:10101/audio_query'
+const SYNTHESIS_URL = 'http://localhost:10101/multi_synthesis'
+
 export const fetchAccentPhrases = async (
   speaker: string,
   lines: string[],
@@ -8,34 +13,26 @@ export const fetchAccentPhrases = async (
   const accentPhrases: AccentPhrases[] = []
   for (const line of lines) {
     const queryParams = new URLSearchParams({ speaker, text: line })
-    const queryResponse = await fetch(
-      `http://localhost:10101/audio_query?${queryParams.toString()}`,
-      { method: 'POST' },
+    const phrase = await postRequest<AccentPhrases>(
+      `${AUDIO_QUERY_URL}?${queryParams.toString()}`,
+      {},
     )
-    if (!queryResponse.ok) {
-      throw new Error(queryResponse.statusText)
-    }
-    const phrase: AccentPhrases = await queryResponse.json()
     accentPhrases.push(phrase)
   }
   return accentPhrases
 }
 
-// Utility function to synthesize audio
 export const synthesizeAudio = async (
   speaker: string,
   accentPhrases: AccentPhrases[],
 ): Promise<ArrayBuffer> => {
-  const synthesisResponse = await fetch(
-    `http://localhost:10101/multi_synthesis?speaker=${speaker}`,
+  const synthesisResponse = await fetchArrayBuffer(
+    `${SYNTHESIS_URL}?speaker=${speaker}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(accentPhrases),
     },
   )
-  if (!synthesisResponse.ok) {
-    throw new Error(synthesisResponse.statusText)
-  }
-  return await synthesisResponse.arrayBuffer()
+  return synthesisResponse
 }
