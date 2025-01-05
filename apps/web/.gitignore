@@ -5,3 +5,4 @@
 /.react-router/
 /build/
 tsconfig.tsbuildinfo
+.wrangler
