@@ -20,6 +20,7 @@ interface Episode {
   audioDuration: number // 秒単位
   audioLength: number // バイト単位
   publishedAt: Date
+  updatedAt: Date
   episodeNumber: number
 }
 
@@ -71,6 +72,9 @@ export function generateRSSFeed(data: PodcastData): string {
   // エピソードごとの処理
   const items = episodes
     .map((ep) => {
+      // 更新日(unix epoch)を付与したオーディオURL
+      const audioUrl = `${ep.audioUrl}?u=${ep.updatedAt.getTime()}`
+
       // 公開日のフォーマット
       const pubDate = ep.publishedAt.toUTCString()
 
@@ -79,7 +83,7 @@ export function generateRSSFeed(data: PodcastData): string {
 
       // Enclosure の length は提供されていないため、0を設定（実際にはファイルサイズを取得する必要あり）
       const enclosure = `<enclosure url="${escapeXML(
-        ep.audioUrl,
+        audioUrl,
       )}" length="${ep.audioLength ?? 0}" type="audio/mpeg"/>`
 
       return `
@@ -88,7 +92,7 @@ export function generateRSSFeed(data: PodcastData): string {
       <description>${escapeXML(ep.description)}</description>
       ${enclosure}
       <pubDate>${pubDate}</pubDate>
-      <guid>${escapeXML(ep.audioUrl)}</guid>
+      <guid>${escapeXML(audioUrl)}</guid>
       <itunes:duration>${duration}</itunes:duration>
       <itunes:explicit>no</itunes:explicit>
     </item>`
