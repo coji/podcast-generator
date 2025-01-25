@@ -114,7 +114,7 @@ export default function PodcastIndex({
         </CardHeader>
         <CardContent>
           <Stack>
-            <div className="text-sm text-muted-foreground">
+            <div className="text-muted-foreground text-sm">
               {episode.description}
             </div>
 
@@ -147,7 +147,7 @@ export default function PodcastIndex({
                         href={entry.link}
                         target="_blank"
                         rel="noreferrer"
-                        className="ml-8 mr-auto text-sm text-blue-500 hover:underline"
+                        className="mr-auto ml-8 text-sm text-blue-500 hover:underline"
                       >
                         <h3>{entry.title}</h3>
                       </a>
