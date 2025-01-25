@@ -1,5 +1,9 @@
 import { createClerkClient } from '@clerk/react-router/api.server'
-import type { Organization, OrganizationMembership, User } from '@prisma/client'
+import type {
+  Organization,
+  OrganizationMembership,
+  User,
+} from '@podcast-generator/db/prisma'
 
 interface ClerkObjects {
   users: Pick<User, 'id' | 'name' | 'email'>[]

@@ -20,7 +20,7 @@ export function RssFeedInput({ onFetch }: RssFeedInputProps) {
         name="url"
         placeholder="Enter RSS feed URL"
         required
-        className="flex-grow rounded border px-3 py-2"
+        className="grow rounded border px-3 py-2"
       />
       <Button
         type="submit"

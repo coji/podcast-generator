@@ -207,7 +207,7 @@ export default function EpisodeNewPage({
                   )
                 })}
 
-                <Stack className="flex-shrink-0">
+                <Stack className="shrink-0">
                   <Button
                     type="button"
                     disabled={selected.length === 0}
@@ -215,7 +215,7 @@ export default function EpisodeNewPage({
                       submit({ entryIds: selected.map((option) => option.id) })
                     }}
                     isLoading={isLoading}
-                    className="flex-shrink-0"
+                    className="shrink-0"
                   >
                     AIで原稿生成 <WandSparklesIcon size="16" className="ml-2" />
                   </Button>
@@ -225,7 +225,7 @@ export default function EpisodeNewPage({
                       type="button"
                       variant="link"
                       onClick={() => stop()}
-                      className="flex-shrink-0"
+                      className="shrink-0"
                     >
                       キャンセル
                     </Button>

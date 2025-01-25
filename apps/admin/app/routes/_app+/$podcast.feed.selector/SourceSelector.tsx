@@ -91,9 +91,9 @@ export function SourceSelector({
                           onChangeSelected?.([...selected, option])
                           setOpen(false)
                         }}
-                        className={'grid cursor-pointer grid-cols-[100px,1fr]'}
+                        className={'grid cursor-pointer grid-cols-[100px_1fr]'}
                       >
-                        <div className="mr-2 text-xs font-medium text-muted-foreground">
+                        <div className="text-muted-foreground mr-2 text-xs font-medium">
                           {format(option.publishedAt, 'yyyy-MM-dd(ccc)', {
                             locale: ja,
                           })}
@@ -118,7 +118,7 @@ export function SourceSelector({
                   <TableCell>
                     <HStack>
                       <div className="flex-1">
-                        <span className="mr-2 text-xs font-medium text-muted-foreground">
+                        <span className="text-muted-foreground mr-2 text-xs font-medium">
                           {format(option.publishedAt, 'yyyy-MM-dd(ccc)', {
                             locale: ja,
                           })}
@@ -129,7 +129,7 @@ export function SourceSelector({
                         type="button"
                         variant="link"
                         size="icon"
-                        className="h-4 w-4 p-0 text-muted-foreground"
+                        className="text-muted-foreground h-4 w-4 p-0"
                         onClick={() => {
                           handleUnselect(option)
                         }}
