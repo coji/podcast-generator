@@ -10,11 +10,7 @@ import {
 } from 'react-router'
 import { Toaster } from '~/components/ui'
 import type { Route } from './+types/root'
-import stylesheet from './app.css?url'
-
-export const links: Route.LinksFunction = () => [
-  { rel: 'stylesheet', href: stylesheet },
-]
+import './app.css'
 
 export const loader = (args: Route.LoaderArgs) => {
   return rootAuthLoader(args)

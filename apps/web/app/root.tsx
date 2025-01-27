@@ -9,11 +9,7 @@ import {
 
 import { ThemeProvider } from 'next-themes'
 import type { Route } from './+types/root'
-import stylesheet from './app.css?url'
-
-export const links: Route.LinksFunction = () => [
-  { rel: 'stylesheet', href: stylesheet },
-]
+import './app.css'
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
