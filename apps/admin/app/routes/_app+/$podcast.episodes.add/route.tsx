@@ -6,6 +6,7 @@ import {
   useForm,
 } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
+import { generatePodcastEpisode } from 'features/generate-podcast/index.server'
 import { WandSparklesIcon } from 'lucide-react'
 import React, { useEffect } from 'react'
 import { useFetcher } from 'react-router'
@@ -29,14 +30,11 @@ import {
   Stack,
   Textarea,
 } from '~/components/ui'
-import { generatePodcastAudio } from '~/jobs'
 import { SourceSelector } from '~/routes/_app+/$podcast.feed.selector/SourceSelector'
 import { responseSchema } from '~/routes/api.podcast-generate/schema'
 import type { Route } from './+types/route'
-import { createEpisode } from './mutations.server'
 import {
   findExistingEpisode,
-  getPodcast,
   listBackgroundMusics,
   listSources,
 } from './queries.server'
@@ -73,27 +71,15 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     return { lastResult: submission.reply() }
   }
 
-  const podcast = await getPodcast(params.podcast)
-
-  const episode = await createEpisode(
-    podcast.slug,
-    {
-      publishedAt: submission.value.publishedAt,
+  const { audioUrl, audioDuration, episode, jobId } =
+    await generatePodcastEpisode({
+      podcastSlug: params.podcast,
+      sources: submission.value.sources,
       title: submission.value.title,
       description: submission.value.description,
       manuscript: submission.value.manuscript,
-    },
-    submission.value.sources,
-  )
-
-  // Call the new audio generation function
-  const { jobId, audioUrl, audioDuration } = await generatePodcastAudio({
-    speaker: podcast.speaker, // Use the podcast speaker
-    text: submission.value.manuscript,
-    organizationId: podcast.organizationId,
-    podcastSlug: params.podcast,
-    episodeId: episode.id,
-  })
+      publishedAt: submission.value.publishedAt,
+    })
 
   return {
     lastResult: submission.reply(),
@@ -101,7 +87,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     audioDuration,
     episode,
     jobId,
-  } // Return the filename
+  }
 }
 
 // Helper function to format minutes
