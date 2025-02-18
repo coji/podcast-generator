@@ -22,11 +22,12 @@ import { listEpisodes } from './queries.server'
 
 export const loader = async ({ params }: Route.LoaderArgs) => {
   const episodes = await listEpisodes(params.podcast)
-  return { episodes }
+  const now = Date.now()
+  return { episodes, now }
 }
 
 export default function EpisodesLayout({
-  loaderData: { episodes },
+  loaderData: { episodes, now },
 }: Route.ComponentProps) {
   return (
     <Stack>
@@ -65,6 +66,13 @@ export default function EpisodesLayout({
                 >
                   {episode.state}
                 </Badge>
+                <Button type="button" size="sm" variant="link" asChild>
+                  <Link
+                    to={`add?source=${episode.EpisodeSources[0].rssEntryId}`}
+                  >
+                    編集
+                  </Link>
+                </Button>
               </div>
             </HStack>
           </CardHeader>
@@ -75,7 +83,11 @@ export default function EpisodesLayout({
               </div>
 
               {episode.audioUrl && (
-                <audio controls src={episode.audioUrl} className="w-full" />
+                <audio
+                  controls
+                  src={`${episode.audioUrl}?nocache=${now}`}
+                  className="w-full"
+                />
               )}
 
               <Collapsible>

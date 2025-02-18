@@ -326,7 +326,10 @@ export default function EpisodeNewPage({
         {fetcher.data?.audioUrl && (
           <div>
             <audio controls autoPlay key={fetcher.data.jobId}>
-              <source src={fetcher.data.audioUrl} type="audio/wav" />
+              <source
+                src={`${fetcher.data.audioUrl}?nocache=${Date.now()}`}
+                type="audio/wav"
+              />
             </audio>
           </div>
         )}

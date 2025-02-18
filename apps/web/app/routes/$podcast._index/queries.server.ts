@@ -17,6 +17,7 @@ export const listEpisodes = async (
       description: true,
       audioUrl: true,
       publishedAt: true,
+      updatedAt: true,
       episodeNumber: true,
       EpisodeSources: {
         select: { RssEntry: { select: { id: true, title: true, link: true } } },

@@ -121,7 +121,7 @@ export default function PodcastIndex({
             {episode.audioUrl && (
               <audio
                 controls
-                src={episode.audioUrl}
+                src={`${episode.audioUrl}?u=${episode.updatedAt.getTime()}`}
                 preload="auto"
                 className="w-full"
               />

@@ -10,6 +10,7 @@ export const getEpisode = (episodeId: Episode['id']) => {
     select: {
       id: true,
       publishedAt: true,
+      updatedAt: true,
       episodeNumber: true,
       title: true,
       description: true,
