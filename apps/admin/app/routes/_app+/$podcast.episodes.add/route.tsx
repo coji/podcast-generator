@@ -9,7 +9,7 @@ import { parseWithZod } from '@conform-to/zod'
 import { generatePodcastEpisode } from 'features/generate-podcast/index.server'
 import { WandSparklesIcon } from 'lucide-react'
 import React, { useEffect } from 'react'
-import { useFetcher } from 'react-router'
+import { href, useFetcher } from 'react-router'
 import { z } from 'zod'
 import { zx } from 'zodix'
 import {
@@ -47,6 +47,10 @@ const schema = z.object({
   publishedAt: z.date(),
   bgm: z.string().optional(),
 })
+
+export const handle = {
+  breadcrumbs: () => <div>新規作成</div>,
+}
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { source } = zx.parseQuery(request, {
@@ -120,7 +124,7 @@ export default function EpisodeNewPage({
   })
 
   const { isLoading, object, stop, submit, error } = useObject({
-    api: '/api/podcast-generate',
+    api: href('/api/podcast-generate'),
     schema: responseSchema,
   })
 

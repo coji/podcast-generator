@@ -1,4 +1,4 @@
-import { data, Link, useFetcher } from 'react-router'
+import { data, href, Link, useFetcher } from 'react-router'
 import { dataWithSuccess } from 'remix-toast'
 import { RssEntry } from '~/components/RssEntry'
 import { Button, HStack, Stack } from '~/components/ui'
@@ -47,7 +47,13 @@ export default function PodcastManager({
       </HStack>
 
       {entries.map((entry) => (
-        <Link key={entry.id} to={entry.id}>
+        <Link
+          key={entry.id}
+          to={href('/:podcast/feed/:entry', {
+            podcast: podcast.slug,
+            entry: entry.id,
+          })}
+        >
           <RssEntry entry={entry} feedTitle={entry.RssFeed.title} />
         </Link>
       ))}

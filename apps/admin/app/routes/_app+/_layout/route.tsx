@@ -7,6 +7,7 @@ import { AudioLinesIcon, NewspaperIcon, PodcastIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import {
   data,
+  href,
   Link,
   NavLink,
   Outlet,
@@ -78,7 +79,7 @@ export default function PodcastLayout({
       <Sidebar>
         <SidebarHeader>
           <h1 className="text-lg font-medium">
-            <Link to="/">Podcast Manager</Link>
+            <Link to={href('/')}>Podcast Manager</Link>
           </h1>
 
           <div className="h-7">
@@ -105,7 +106,7 @@ export default function PodcastLayout({
             <Select
               value={podcast?.slug ?? ''}
               onValueChange={(value) => {
-                navigate(`/${value}/episodes`)
+                navigate(href('/:podcast/episodes', { podcast: value }))
               }}
             >
               <SelectTrigger id="podcast-select" className="whitespace-normal">
@@ -124,7 +125,7 @@ export default function PodcastLayout({
 
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel>Contenet</SidebarGroupLabel>
+            <SidebarGroupLabel>Contents</SidebarGroupLabel>
             <SidebarGroupContent>
               {podcast && (
                 <SidebarMenu>
@@ -154,7 +155,7 @@ export default function PodcastLayout({
         </SidebarContent>
 
         <SidebarFooter>
-          <div className="h-7">
+          <div className="h-7 text-center">
             <ClerkLoaded>
               <UserButton
                 showName

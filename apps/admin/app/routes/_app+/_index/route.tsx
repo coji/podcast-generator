@@ -1,4 +1,4 @@
-import { Link, redirect } from 'react-router'
+import { href, Link, redirect } from 'react-router'
 import {
   Card,
   CardContent,
@@ -15,7 +15,8 @@ export const loader = async (args: Route.LoaderArgs) => {
   const user = await requireUser(args)
   const podcasts = user.orgId ? await listPodcasts(user.orgId) : []
   if (podcasts.length === 1) {
-    throw redirect(`/${podcasts[0].slug}/episodes`)
+    // Redirect to the only podcast if there is only one
+    throw redirect(href('/:podcast/episodes', { podcast: podcasts[0].slug }))
   }
   return { podcasts }
 }

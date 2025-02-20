@@ -1,4 +1,4 @@
-import { Link, type Params } from 'react-router'
+import { href, Link } from 'react-router'
 import {
   Button,
   Card,
@@ -18,8 +18,17 @@ export const handle = {
     params,
   }: {
     loaderData: Awaited<ReturnType<typeof loader>>
-    params: Params
-  }) => <Link to={`/${params.podcast}/feed/${params.entry}`}>詳細</Link>,
+    params: Route.LoaderArgs['params']
+  }) => (
+    <Link
+      to={href('/:podcast/feed/:entry', {
+        podcast: params.podcast,
+        entry: params.entry,
+      })}
+    >
+      詳細
+    </Link>
+  ),
 }
 
 export const loader = async ({ params }: Route.LoaderArgs) => {
@@ -41,7 +50,9 @@ export default function EntryIndex({
           </div>
           <div className="flex-1" />
           <Button type="button" asChild>
-            <Link to={`/${params.podcast}/episodes/add?source=${entry.id}`}>
+            <Link
+              to={`${href('/:podcast/episodes/add', { podcast: params.podcast })}?source=${entry.id}`}
+            >
               この記事を元にエピソードを生成
             </Link>
           </Button>

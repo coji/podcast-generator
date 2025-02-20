@@ -1,7 +1,7 @@
 import { format } from 'date-fns/format'
 import { ja } from 'date-fns/locale'
 import { ChevronRightIcon } from 'lucide-react'
-import { Link } from 'react-router'
+import { href, Link } from 'react-router'
 import {
   Badge,
   Button,
@@ -23,11 +23,11 @@ import { listEpisodes } from './queries.server'
 export const loader = async ({ params }: Route.LoaderArgs) => {
   const episodes = await listEpisodes(params.podcast)
   const now = Date.now()
-  return { episodes, now }
+  return { podcast: params.podcast, episodes, now }
 }
 
 export default function EpisodesLayout({
-  loaderData: { episodes, now },
+  loaderData: { podcast, episodes, now },
 }: Route.ComponentProps) {
   return (
     <Stack>
@@ -35,7 +35,7 @@ export default function EpisodesLayout({
         <h2 className="flex-1 text-xl font-semibold">エピソード</h2>
         <div>
           <Button type="button" size="sm" variant="link" asChild>
-            <Link to="add">追加</Link>
+            <Link to={href('/:podcast/episodes/add', { podcast })}>追加</Link>
           </Button>
         </div>
       </HStack>
@@ -68,7 +68,7 @@ export default function EpisodesLayout({
                 </Badge>
                 <Button type="button" size="sm" variant="link" asChild>
                   <Link
-                    to={`add?source=${episode.EpisodeSources[0].rssEntryId}`}
+                    to={`${href('/:podcast/episodes/add', { podcast })}?source=${episode.EpisodeSources[0].rssEntryId}`}
                   >
                     編集
                   </Link>
