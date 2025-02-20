@@ -15,12 +15,12 @@ const feed = async () => {
     data: {
       organizationId: org.id,
       speaker: '497929760',
-      slug: 'chanmomo',
-      authorName: 'ちゃんもも',
-      authorEmail: 'chanmomo@example.com',
-      title: 'アグレッシブちゃんもも Podcast',
-      categoryId: 'Entrepreneurship',
-      description: 'ちゃんももポッドキャストです',
+      slug: 'techtalk',
+      authorName: 'coji',
+      authorEmail: 'coji@example.com',
+      title: 'TechTalk Podcast',
+      categoryId: 'Technology',
+      description: 'TechTalk Podcast',
     },
   })
   const rssFeed = await prisma.rssFeed.create({
