@@ -18,6 +18,7 @@
       "@clerk/shared",
       "@prisma/client",
       "@prisma/engines",
+      "esbuild",
       "prisma",
       "sharp",
       "workerd"
