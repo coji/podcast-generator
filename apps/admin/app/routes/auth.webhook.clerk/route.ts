@@ -1,15 +1,14 @@
 import type { ActionFunctionArgs } from 'react-router'
 import { match } from 'ts-pattern'
-import { verifyClerkWebhookOrThrow } from './functions.server'
 import {
   organizationDelete,
-  organizationUpsert,
-} from './functions.server/organization'
-import {
   organizationMembershipDelete,
   organizationMembershipUpsert,
-} from './functions.server/organization_membership'
-import { userDelete, userUpsert } from './functions.server/user'
+  organizationUpsert,
+  userDelete,
+  userUpsert,
+  verifyClerkWebhookOrThrow,
+} from './functions.server/index.server'
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const event = await verifyClerkWebhookOrThrow(request)
