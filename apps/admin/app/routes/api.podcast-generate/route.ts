@@ -57,7 +57,9 @@ ${entry.content}
 `
 
   const result = await streamObject({
-    model: google('gemini-2.0-pro-exp-02-05', { structuredOutputs: false }),
+    model: google('gemini-2.5-flash-preview-05-20', {
+      structuredOutputs: false,
+    }),
     schema: responseSchema,
     prompt,
     mode: 'json',
