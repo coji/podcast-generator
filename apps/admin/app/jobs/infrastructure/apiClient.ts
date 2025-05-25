@@ -4,17 +4,29 @@ export const postRequest = async <T>(
   body: any,
   headers: Record<string, string> = {},
 ): Promise<T> => {
-  const response = await fetch(url, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify(body),
-  })
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 300000) // 5分に延長
 
-  if (!response.ok) {
-    throw new Error(`API request failed: ${response.statusText}`)
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    })
+    clearTimeout(timeoutId)
+
+    if (!response.ok) {
+      throw new Error(`API request failed: ${response.statusText}`)
+    }
+
+    return await response.json()
+  } catch (error) {
+    clearTimeout(timeoutId)
+    throw new Error(
+      `Error in postRequest: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    )
   }
-
-  return await response.json()
 }
 
 export const fetchArrayBuffer = async (
